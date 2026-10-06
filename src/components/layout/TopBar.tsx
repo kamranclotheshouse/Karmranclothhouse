@@ -24,7 +24,7 @@ export default function TopBar({ settings }: { settings: StoreSettings }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
         {/* Address */}
-        <span className="flex items-center gap-1 whitespace-nowrap">
+        <span className="flex max-w-full items-center gap-1 truncate sm:max-w-none sm:whitespace-nowrap">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
@@ -60,7 +60,7 @@ export default function TopBar({ settings }: { settings: StoreSettings }) {
         </span>
 
         {/* Phone + WhatsApp */}
-        <span className="flex items-center gap-4 whitespace-nowrap">
+        <span className="flex items-center gap-3 whitespace-nowrap sm:gap-4">
           <a
             href={`tel:${phone.replace(/\s/g, '')}`}
             className="flex items-center gap-1 hover:opacity-70 transition-opacity"

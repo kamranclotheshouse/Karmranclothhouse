@@ -69,6 +69,8 @@
   html {
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
+    max-width: 100%;
+    overflow-x: clip;
   }
 
   body {
@@ -77,6 +79,13 @@
     font-family: var(--font-outfit), sans-serif;
     font-weight: 400;
     line-height: 1.6;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  main {
+    min-width: 0;
   }
 
   /* Headings use Playfair Display — mixed-case, NOT uppercase */
@@ -125,6 +134,39 @@
 }
 .border-gold {
   border-color: #C9A227 !important;
+}
+
+.site-loading {
+  min-height: 55svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--color-green);
+  background: var(--color-bg-primary);
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.site-loading__spinner {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 3px solid rgba(14, 59, 44, 0.16);
+  border-top-color: var(--color-gold);
+  border-radius: 9999px;
+  animation: siteLoadingSpin 0.8s linear infinite;
+}
+
+@keyframes siteLoadingSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loading__spinner {
+    animation-duration: 1.6s;
+  }
 }
 
 /* ── Interactive Keyframes & Micro-Animations ────────────────────── */

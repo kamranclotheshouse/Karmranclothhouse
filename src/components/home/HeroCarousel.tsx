@@ -79,8 +79,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
 
   return (
     <section
-      className="relative flex flex-col overflow-hidden bg-brand text-white"
-      style={{ minHeight: '88svh' }}
+      className="relative flex min-h-[78svh] flex-col overflow-hidden bg-brand text-white md:min-h-[88svh]"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -130,13 +129,13 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center">
-        <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 py-16 md:py-24">
+        <div className="w-full max-w-7xl mx-auto px-4 py-14 sm:px-8 sm:py-16 md:py-24">
           <div key={currentIndex} className="max-w-2xl animate-fade-in-up">
             {/* Eyebrow */}
-            <div className="flex items-center gap-3 mb-6">
-              <div className="h-px w-12" style={{ backgroundColor: 'var(--color-gold)' }} />
+            <div className="mb-5 flex items-center gap-2 sm:mb-6 sm:gap-3">
+              <div className="h-px w-8 shrink-0 sm:w-12" style={{ backgroundColor: 'var(--color-gold)' }} />
               <p
-                className="text-[10px] sm:text-[11px] tracking-[0.5em] uppercase font-semibold"
+                className="text-[9px] tracking-[0.3em] uppercase font-semibold sm:text-[11px] sm:tracking-[0.5em]"
                 style={{ color: 'var(--color-gold)' }}
               >
                 {content.eyebrow}
@@ -146,7 +145,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
             {/* Headline */}
             <h1
               style={{ fontFamily: "'Playfair Display', serif" }}
-              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl mb-6 leading-[1.02] drop-shadow-lg"
+              className="mb-5 max-w-full break-words text-[2.65rem] leading-[1.02] drop-shadow-lg sm:mb-6 sm:text-6xl md:text-7xl lg:text-8xl"
             >
               <span style={{ color: '#C9A227' }}>{content.titleLine1}</span>
               {content.titleLine2 && (
@@ -158,16 +157,16 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base md:text-lg max-w-lg mb-10 leading-relaxed font-light drop-shadow"
+            <p className="mb-8 max-w-lg text-xs leading-relaxed font-light drop-shadow sm:mb-10 sm:text-base md:text-lg"
                style={{ color: 'rgba(255,255,255,0.85)' }}>
               {content.subtitle}
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
               <Link
                 href={content.ctaPrimaryHref || '/categories'}
-                className="group btn-shimmer inline-flex items-center gap-3 px-9 py-4 text-[11px] font-bold tracking-[0.25em] uppercase transition-all duration-300 shadow-2xl hover:shadow-[0_8px_30px_rgba(201,162,39,0.35)] hover:-translate-y-0.5"
+                className="group btn-shimmer inline-flex w-full items-center justify-center gap-3 px-6 py-3.5 text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-2xl hover:shadow-[0_8px_30px_rgba(201,162,39,0.35)] hover:-translate-y-0.5 sm:w-auto sm:px-9 sm:py-4 sm:text-[11px] sm:tracking-[0.25em]"
                 style={{ backgroundColor: 'var(--color-gold)', color: 'var(--color-ink)' }}
                 onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = '#b8901f'; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'var(--color-gold)'; }}
@@ -182,7 +181,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
               {content.ctaSecondaryLabel && (
                 <Link
                   href={content.ctaSecondaryHref || '/categories'}
-                  className="group btn-shimmer inline-flex items-center gap-2 px-9 py-4 text-[11px] font-semibold tracking-[0.25em] uppercase bg-transparent transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(201,162,39,0.25)]"
+                  className="group btn-shimmer inline-flex w-full items-center justify-center gap-2 px-6 py-3.5 text-[10px] font-semibold tracking-[0.2em] uppercase bg-transparent transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(201,162,39,0.25)] sm:w-auto sm:px-9 sm:py-4 sm:text-[11px] sm:tracking-[0.25em]"
                   style={{ border: '1px solid #C9A227', color: '#C9A227' }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLAnchorElement;
@@ -233,7 +232,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center text-white transition-all duration-200"
+            className="absolute left-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-white transition-all duration-200 sm:left-5 sm:h-10 sm:w-10"
             style={{ border: '1px solid rgba(255,255,255,0.3)', backgroundColor: 'rgba(10,43,32,0.5)' }}
             aria-label="Previous slide"
           >
@@ -243,7 +242,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center text-white transition-all duration-200"
+            className="absolute right-2 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center text-white transition-all duration-200 sm:right-5 sm:h-10 sm:w-10"
             style={{ border: '1px solid rgba(255,255,255,0.3)', backgroundColor: 'rgba(10,43,32,0.5)' }}
             aria-label="Next slide"
           >

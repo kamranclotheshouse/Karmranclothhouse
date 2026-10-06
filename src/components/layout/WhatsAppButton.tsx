@@ -9,7 +9,7 @@ export default function WhatsAppButton({ whatsappNumber }: { whatsappNumber: str
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[var(--color-whatsapp)] text-white rounded-full shadow-2xl hover:scale-110 transition-transform duration-300"
+      className="fixed bottom-4 right-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-whatsapp)] text-white shadow-2xl transition-transform duration-300 hover:scale-110 sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
       aria-label="Chat on WhatsApp"
     >
       <div className="absolute inset-0 rounded-full animate-ping bg-[var(--color-whatsapp)] opacity-30"></div>

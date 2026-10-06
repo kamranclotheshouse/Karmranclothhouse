@@ -68,7 +68,7 @@ function CategoriesDropdown({ categories }: { categories: Category[] }) {
 
   return (
     <div
-      className="absolute top-full left-1/2 -translate-x-1/2 w-[390px] bg-white shadow-2xl border border-line z-50 animate-slide-down overflow-hidden"
+      className="absolute top-full left-1/2 w-[calc(100vw-2rem)] max-w-[390px] -translate-x-1/2 bg-white shadow-2xl border border-line z-50 animate-slide-down overflow-hidden"
       style={{
         boxShadow: '0 20px 45px rgba(10,43,32,0.18)',
       }}
