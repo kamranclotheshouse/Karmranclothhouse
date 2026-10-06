@@ -540,7 +540,7 @@ export function ProductForm({
         <AdminSection
           step={5}
           title="Colours"
-          description="Har rang ke liye ek circle banta hai Product page pe. Jo rang stock me nahi, usse circle dheema kar diya jata hai."
+          description="Product page par pehle 3 colours dikhte hain; baqi colours +N more ke andar milte hain. Jo rang stock me nahi, uska circle dheema hota hai."
         >
           {colors.length === 0 && (
             <p className="admin-hint" style={{ marginTop: 0, marginBottom: 14 }}>

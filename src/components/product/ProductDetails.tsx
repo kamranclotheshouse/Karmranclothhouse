@@ -30,6 +30,7 @@ export default function ProductDetails({
   const [activeImage, setActiveImage] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [addedToCart, setAddedToCart] = useState(false);
+  const [showAllColors, setShowAllColors] = useState(false);
 
   useEffect(() => {
     trackViewContent({ slug: product.slug, name: product.name, price: product.price });
@@ -255,8 +256,8 @@ export default function ProductDetails({
                   Color: <span className="font-medium text-ink">{selectedColor.name}</span>
                   {!selectedColor.inStock && <span className="ml-2 font-normal" style={{ color: 'var(--color-fg-muted)' }}>(out of stock)</span>}
                 </p>
-                <div className="flex gap-3">
-                  {product.colors.map((color) => (
+                <div className="flex flex-wrap items-center gap-3">
+                  {(showAllColors ? product.colors : product.colors.slice(0, 3)).map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
@@ -274,6 +275,15 @@ export default function ProductDetails({
                       aria-label={color.name}
                     />
                   ))}
+                  {product.colors.length > 3 && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAllColors((value) => !value)}
+                      className="text-xs font-medium text-brand underline underline-offset-4"
+                    >
+                      {showAllColors ? 'Show less' : `+${product.colors.length - 3} more`}
+                    </button>
+                  )}
                 </div>
               </div>
               )}

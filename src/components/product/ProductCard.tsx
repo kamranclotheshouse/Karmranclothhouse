@@ -82,9 +82,10 @@ export default function ProductCard({ product, showBrand = true, showColor = fal
           </h3>
         </Link>
 
-        {showColor && product.colors?.[0] && (
+        {showColor && product.colors?.length > 0 && (
           <p className="text-[11px] mb-2" style={{ color: 'rgba(16, 35, 28, 0.6)' }}>
-            Color: {product.colors[0].name}
+            Colours: {product.colors.slice(0, 3).map((color) => color.name).join(' · ')}
+            {product.colors.length > 3 && ` · +${product.colors.length - 3} more`}
           </p>
         )}
 
