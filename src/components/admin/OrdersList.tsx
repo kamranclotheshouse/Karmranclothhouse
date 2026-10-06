@@ -187,7 +187,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 </span>
               </div>
 
-              <div className="admin-order-line" style={{ marginBottom: 8 }}>
+              <div className="admin-order-line admin-order-customer" style={{ marginBottom: 8 }}>
                 <span>
                   <strong>{order.customerName}</strong>
                 </span>
@@ -200,7 +200,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
               </div>
 
               {order.courierName && order.trackingNumber && (
-                <p style={{ fontSize: 12, color: '#6b7280', margin: '0 0 12px' }}>
+                <p className="admin-order-shipment" style={{ fontSize: 12, color: '#6b7280', margin: '0 0 12px' }}>
                   <strong style={{ color: '#10231C' }}>Courier:</strong> {order.courierName}
                   {' · '}
                   <strong style={{ color: '#10231C' }}>Tracking:</strong> {order.trackingNumber}
@@ -217,7 +217,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 </p>
               )}
 
-              <p
+              <p className="admin-order-address"
                 style={{
                   fontSize: 12,
                   color: '#6b7280',
@@ -236,9 +236,9 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 )}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+              <div className="admin-order-items" style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
                 {order.items.map((item, i) => (
-                  <div
+                  <div className="admin-order-item"
                     key={`${item.slug}-${i}`}
                     style={{ display: 'flex', gap: 10, alignItems: 'center' }}
                   >
@@ -276,7 +276,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 ))}
               </div>
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+              <div className="admin-order-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                 <select
                   className="admin-status-select"
                   value={order.status}
