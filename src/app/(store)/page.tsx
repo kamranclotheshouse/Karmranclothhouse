@@ -28,7 +28,10 @@ export default async function Home() {
   const displayCategories = categories.slice(0, 8);
 
   // Best sellers: prefer bestseller-flagged products, fallback to featured
-  const bestsellingProducts = bestsellers.length >= 4 ? bestsellers : [...bestsellers, ...featured].slice(0, 4);
+  const bestsellerSource = bestsellers.length >= 4 ? bestsellers : [...bestsellers, ...featured];
+  const bestsellingProducts = Array.from(
+    new Map(bestsellerSource.map((product) => [product.slug, product])).values()
+  ).slice(0, 4);
 
   return (
     <>

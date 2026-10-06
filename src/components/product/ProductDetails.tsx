@@ -137,7 +137,7 @@ export default function ProductDetails({
                     }}
                     aria-label={`View image ${i + 1}`}
                   >
-                    <Image src={img} alt="" fill sizes="80px" className="object-cover" />
+                    <Image src={img} alt="" fill unoptimized sizes="80px" className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -157,6 +157,7 @@ export default function ProductDetails({
                     alt={product.name}
                     fill
                     priority
+                    unoptimized
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover transition-opacity duration-300"
                   />
@@ -175,7 +176,7 @@ export default function ProductDetails({
                       }}
                       aria-label={`View image ${i + 1}`}
                     >
-                      <Image src={img} alt="" fill sizes="64px" className="object-cover" />
+                  <Image src={img} alt="" fill unoptimized sizes="64px" className="object-cover" />
                     </button>
                   ))}
                 </div>

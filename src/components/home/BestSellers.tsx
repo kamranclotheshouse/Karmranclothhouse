@@ -53,6 +53,7 @@ function ProductCard({ product }: { product: Product }) {
           src={image}
           alt={product.name}
           fill
+          unoptimized
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-108"
         />
