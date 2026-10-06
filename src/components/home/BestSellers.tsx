@@ -251,7 +251,7 @@ export default function BestSellers({ products }: BestSellersProps) {
         {/* CTA */}
         <div className="text-center mt-12">
           <Link
-            href="/categories"
+            href="/products"
             className="group btn-shimmer inline-flex items-center gap-3 px-10 py-4 text-[11px] font-bold tracking-[0.25em] uppercase transition-all duration-300 shadow-md hover:-translate-y-0.5 hover:shadow-xl"
             style={{ backgroundColor: '#0E3B2C', color: '#FFFFFF' }}
             onMouseEnter={(e) => {
@@ -265,7 +265,7 @@ export default function BestSellers({ products }: BestSellersProps) {
               el.style.color = '#FFFFFF';
             }}
           >
-            View All Collections
+            Explore All Products
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="transition-transform duration-300 group-hover:translate-x-1.5">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
