@@ -23,6 +23,7 @@ export default function ProductGrid({
   products,
   showColor = false,
   showFilters = false,
+  showSearch = false,
   whatsappNumber,
   emptyMessage = 'Stock for this category is being updated — WhatsApp us for current availability.',
   emptyAction,
@@ -30,6 +31,7 @@ export default function ProductGrid({
   products: Product[];
   showColor?: boolean;
   showFilters?: boolean;
+  showSearch?: boolean;
   whatsappNumber?: string;
   emptyMessage?: string;
   emptyAction?: React.ReactNode;
@@ -37,6 +39,7 @@ export default function ProductGrid({
   const [sort, setSort] = useState<SortKey>('featured');
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [activeColor, setActiveColor] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
 
   // Filters self-populate from whatever the products actually carry —
   // no fake entries. Brand row hides itself when a page has 0–1 brands.
@@ -65,12 +68,16 @@ export default function ProductGrid({
     () =>
       products.filter((p) => {
         if (activeBrand && p.brandSlug !== activeBrand) return false;
+        const needle = search.trim().toLowerCase();
+        if (needle && ![p.name, p.brand, p.category, p.slug].some((value) => value.toLowerCase().includes(needle))) {
+          return false;
+        }
         if (activeColor && !(p.colors ?? []).some((c) => c.name?.trim().toLowerCase() === activeColor)) {
           return false;
         }
         return true;
       }),
-    [products, activeBrand, activeColor]
+    [products, activeBrand, activeColor, search]
   );
 
   const sorted = useMemo(() => {
@@ -87,10 +94,11 @@ export default function ProductGrid({
     }
   }, [filtered, sort]);
 
-  const hasActiveFilters = Boolean(activeBrand || activeColor);
+  const hasActiveFilters = Boolean(activeBrand || activeColor || search.trim());
   const clearFilters = () => {
     setActiveBrand(null);
     setActiveColor(null);
+    setSearch('');
   };
 
   if (products.length === 0) {
@@ -143,9 +151,24 @@ export default function ProductGrid({
 
       {/* Filter band — brand + color, self-populated from the products below.
           Colors empty → WhatsApp fallback instead of an empty row. */}
-      {showFilters && (brandOptions.length > 1 || colorOptions.length > 0 || Boolean(whatsappLink)) && (
+      {showFilters && (showSearch || brandOptions.length > 1 || colorOptions.length > 0 || Boolean(whatsappLink)) && (
         <div style={{ borderBottom: '1px solid var(--color-border)', backgroundColor: 'white' }} className="py-4">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-3">
+            {showSearch && (
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <label htmlFor="product-catalogue-search" className="text-xs font-medium uppercase tracking-wider text-muted">
+                  Find a product
+                </label>
+                <input
+                  id="product-catalogue-search"
+                  type="search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search product, brand or category…"
+                  className="w-full border border-line bg-white px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-brand sm:max-w-sm"
+                />
+              </div>
+            )}
             {brandOptions.length > 1 && (
               <div className="flex items-start gap-3">
                 <span className="text-xs tracking-wider uppercase text-muted font-medium whitespace-nowrap pt-1.5">

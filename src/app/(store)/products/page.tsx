@@ -37,6 +37,7 @@ export default async function AllProductsPage() {
         products={products}
         showColor
         showFilters
+        showSearch
         whatsappNumber={settings.whatsappNumber}
         emptyMessage="Abhi catalogue update ho raha hai — current stock ke liye WhatsApp karein."
       />
