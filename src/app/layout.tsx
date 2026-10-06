@@ -3,6 +3,8 @@ import { Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
 import NavigationLoader from '@/components/layout/NavigationLoader';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.vercel.app';
+
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   weight: ["400", "500", "600", "700"],
@@ -18,15 +20,16 @@ const outfit = Outfit({
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamrancloth.pk'
-  ),
+  metadataBase: new URL(SITE_URL),
+  verification: {
+    google: '37NQHd58yKt-wUf5ysvr1L6Ke0KsOEjStIA8xO1U1PQ',
+  },
   title: "Kamran Cloth House | Premium Men's Fabric — Saddar, Peshawar",
   description:
-    "Explore the finest unstitched fabric, dulha designs & branded collections at Kamran Cloth House, Shafi Market, Saddar, Peshawar. Cash on Delivery across Pakistan.",
+    "Shop premium men's unstitched fabric, cotton, wash-n-wear, winter cloth, dulha designs, shawls and branded collections from Kamran Cloth House, Shafi Market, Saddar, Peshawar. Cash on Delivery across Pakistan.",
   openGraph: {
     type: 'website',
-    locale: 'en_US',
+    locale: 'en_PK',
     siteName: 'Kamran Cloth House',
     title: "Kamran Cloth House | Premium Men's Fabric — Saddar, Peshawar",
     description:
