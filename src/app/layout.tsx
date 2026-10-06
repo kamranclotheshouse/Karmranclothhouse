@@ -21,6 +21,11 @@ const outfit = Outfit({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: [{ url: '/images/favicon.png', type: 'image/png' }],
+    shortcut: ['/images/favicon.png'],
+    apple: [{ url: '/images/favicon.png', type: 'image/png' }],
+  },
   verification: {
     google: '37NQHd58yKt-wUf5ysvr1L6Ke0KsOEjStIA8xO1U1PQ',
   },
