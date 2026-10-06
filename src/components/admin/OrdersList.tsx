@@ -147,7 +147,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 </span>
               </div>
 
-              <div className="admin-order-line" style={{ marginBottom: 12 }}>
+              <div className="admin-order-line" style={{ marginBottom: 8 }}>
                 <span>
                   <strong>{order.customerName}</strong>
                 </span>
@@ -158,6 +158,25 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                   {order.items.reduce((n, i) => n + i.quantity, 0)} item(s)
                 </span>
               </div>
+
+              <p
+                style={{
+                  fontSize: 12,
+                  color: '#6b7280',
+                  margin: '0 0 12px',
+                  lineHeight: 1.5,
+                }}
+              >
+                <strong style={{ color: '#10231C', fontWeight: 600 }}>Delivery address: </strong>
+                {order.deliveryAddress}
+                {order.specialInstructions && (
+                  <>
+                    <br />
+                    <strong style={{ color: '#10231C', fontWeight: 600 }}>Notes: </strong>
+                    {order.specialInstructions}
+                  </>
+                )}
+              </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
                 {order.items.map((item, i) => (

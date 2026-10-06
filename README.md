@@ -93,6 +93,7 @@ public/           Static assets (logo, category and hero images)
 
 ## Documentation
 
+- [`DEVELOPER.md`](./DEVELOPER.md) — architecture, data flow, conventions, testing, deployment notes
 - [`docs/DESIGN_SYSTEM.md`](./docs/DESIGN_SYSTEM.md) — Green & Gold palette, typography, component rules
 - [`docs/DATABASE_SCHEMA.md`](./docs/DATABASE_SCHEMA.md) — tables and data models
 - [`docs/TECH_STACK.md`](./docs/TECH_STACK.md) — architecture decisions
