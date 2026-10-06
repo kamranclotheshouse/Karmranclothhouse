@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
 import {
   NotFoundError,
   deleteProduct,
@@ -12,6 +13,41 @@ import type { ProductPatch } from '@/lib/db/catalogue';
 import { fail, ok, readJson, requireAdmin } from '@/lib/admin/api';
 import { revalidateCatalogue } from '@/lib/admin/revalidate';
 import { validateProduct, hasErrors, type ProductFormValues } from '@/lib/admin/validate-product';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
+
+/** Only return IDs for images uploaded by this app, never arbitrary external URLs. */
+function productImagePublicId(imageUrl: string): string | null {
+  try {
+    const url = new URL(imageUrl);
+    if (url.hostname !== 'res.cloudinary.com') return null;
+    const marker = '/kch-products/';
+    const start = url.pathname.indexOf(marker);
+    if (start < 0) return null;
+    return url.pathname.slice(start + 1).replace(/\.[^/.]+$/, '');
+  } catch {
+    return null;
+  }
+}
+
+async function removeProductImages(images: string[]) {
+  const publicIds = [...new Set(images.map(productImagePublicId).filter((id): id is string => Boolean(id)))];
+  if (!publicIds.length || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) return;
+
+  const results = await Promise.allSettled(
+    publicIds.map((publicId) => cloudinary.uploader.destroy(publicId, { invalidate: true, resource_type: 'image' }))
+  );
+  results.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      console.warn(`[products] Could not remove Cloudinary image ${publicIds[index]}:`, result.reason);
+    }
+  });
+}
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -152,7 +188,10 @@ export async function DELETE(request: Request, { params }: Params) {
 
   const { id } = await params;
   try {
+    const product = await getProductById(id);
+    if (!product) throw new NotFoundError(id);
     await deleteProduct(id);
+    await removeProductImages(product.images);
     revalidateCatalogue();
     return ok({});
   } catch (error) {
