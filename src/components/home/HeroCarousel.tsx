@@ -79,7 +79,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
 
   return (
     <section
-      className="relative flex min-h-[78svh] flex-col overflow-hidden bg-brand text-white md:min-h-[calc(100svh-7rem)]"
+      className="relative flex min-h-[78svh] flex-col overflow-hidden bg-brand text-white md:min-h-[100svh]"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
