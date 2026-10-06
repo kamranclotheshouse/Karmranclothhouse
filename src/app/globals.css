@@ -1,0 +1,273 @@
+@import "tailwindcss";
+
+:root {
+  /* Green & Gold palette — Kamran Cloth House */
+  --color-green: #0E3B2C;          /* Deep forest — header, hero, footer, dark sections */
+  --color-green-deep: #0A2B20;     /* Footer base / gradient end */
+  --color-green-soft: #1A5140;     /* Hover, secondary panels */
+  --color-gold: #C9A227;           /* Gold ON green — 4.8:1 ✓ */
+  --color-gold-text: #7A5F0E;      /* Gold text ON cream/white — 4.5:1 ✓ */
+  --color-cream: #F5F0E6;          /* Alternate light sections */
+  --color-ink: #10231C;            /* Body text on cream */
+
+  --color-bg-primary: #FFFFFF;     /* Main page background (white) */
+  --color-bg-secondary: #F5F0E6;   /* Alternate sections (cream) */
+  --color-bg-dark: #0A2B20;        /* Dark sections (deep green) */
+
+  --color-fg-primary: #10231C;     /* Main text on light (ink) */
+  --color-fg-muted: rgba(16, 35, 28, 0.55); /* Secondary/caption text */
+
+  --color-border: rgb(211 206 197);      /* Default dividers (warm taupe) */
+  --color-border-strong: #10231C;        /* Emphasized borders */
+
+  /* WhatsApp CTA — keep distinct from site green */
+  --color-whatsapp: #0E7C6E;
+  --color-whatsapp-hover: #0A6156;
+
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-fg-primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Semantic brand names — direct hex values to avoid circular var() references */
+  --color-brand:       #0E3B2C;
+  --color-brand-deep:  #0A2B20;
+  --color-brand-soft:  #1A5140;
+  --color-gold:        #C9A227;
+  --color-gold-text:   #7A5F0E;
+  --color-cream:       #F5F0E6;
+  --color-ink:         #10231C;
+
+  --color-bg-primary:   #FFFFFF;
+  --color-bg-secondary: #F5F0E6;
+  --color-bg-dark:      #0A2B20;
+
+  --color-fg-primary: #10231C;
+  --color-fg-muted:   rgba(16, 35, 28, 0.55);
+
+  --color-border:        rgb(211 206 197);
+  --color-border-strong: #10231C;
+  --color-line:          rgb(211 206 197);
+
+  --color-whatsapp:      #0E7C6E;
+  --color-whatsapp-hover:#0A6156;
+
+  --font-display: var(--font-playfair), serif;
+  --font-body:    var(--font-outfit), sans-serif;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-fg-primary);
+    font-family: var(--font-outfit), sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  /* Headings use Playfair Display — mixed-case, NOT uppercase */
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-playfair), serif;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    /* no text-transform: uppercase */
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+/* Explicit high-specificity utility overrides to guarantee contrast */
+.text-gold {
+  color: #C9A227 !important;
+}
+.text-gold-light {
+  color: #D4AF37 !important;
+}
+.text-white {
+  color: #FFFFFF !important;
+}
+.text-ink {
+  color: #10231C !important;
+}
+.text-cream {
+  color: #F5F0E6 !important;
+}
+.bg-brand {
+  background-color: #0E3B2C !important;
+}
+.bg-brand-deep {
+  background-color: #0A2B20 !important;
+}
+.bg-gold {
+  background-color: #C9A227 !important;
+}
+.border-gold {
+  border-color: #C9A227 !important;
+}
+
+/* ── Interactive Keyframes & Micro-Animations ────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGoldGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(201, 162, 39, 0);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes shimmerPass {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+/* Reusable Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: fadeInDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: floatGentle 3.5s ease-in-out infinite;
+}
+
+.animate-gold-glow {
+  animation: pulseGoldGlow 2.5s infinite;
+}
+
+/* Luxurious Shimmer effect on interactive buttons */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 100%
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+}
+
+.btn-shimmer:hover::after {
+  animation: shimmerPass 0.85s ease-out;
+}
+
+/* Card hover lift & glow */
+.card-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(10, 43, 32, 0.12);
+  border-color: #C9A227 !important;
+}
+
+/* Smooth zoom for product images */
+.img-smooth-zoom {
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .img-smooth-zoom {
+  transform: scale(1.06);
+}
+
+/* Underline slide-in for links */
+.nav-link-slide {
+  position: relative;
+}
+
+.nav-link-slide::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #C9A227;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px;
+}
+
+.nav-link-slide:hover::after {
+  width: 80%;
+  left: 10%;
+}
