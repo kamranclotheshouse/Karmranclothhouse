@@ -10,6 +10,7 @@ const staticPages: { path: string; priority: number }[] = [
   { path: '', priority: 1 },
   { path: '/categories', priority: 0.9 },
   { path: '/brands', priority: 0.8 },
+  { path: '/products', priority: 0.8 },
   { path: '/tailoring', priority: 0.7 },
   { path: '/how-to-order', priority: 0.7 },
   { path: '/faq', priority: 0.6 },
