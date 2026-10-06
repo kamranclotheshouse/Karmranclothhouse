@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Order, TrackedOrder } from '@/lib/orders';
+import { getCourierTrackingUrl, type Order, type TrackedOrder } from '@/lib/orders';
 
 const STATUS_LABELS: Record<Order['status'], string> = {
   pending: 'Order Placed',
@@ -230,6 +230,26 @@ export default function TrackPage() {
                   </div>
                 ))}
               </div>
+
+              {order.courierName && order.trackingNumber && (
+                <div className="px-6 py-5 border-b border-line bg-emerald-50/40">
+                  <p className="text-[10px] tracking-widest uppercase font-semibold text-ink mb-2">Shipment Tracking</p>
+                  <p className="text-xs text-zinc-600">
+                    Courier: <strong className="text-ink">{order.courierName}</strong>
+                    {' · '}Tracking ID: <strong className="text-ink">{order.trackingNumber}</strong>
+                  </p>
+                  {getCourierTrackingUrl(order.courierName, order.trackingNumber) && (
+                    <a
+                      href={getCourierTrackingUrl(order.courierName, order.trackingNumber) ?? '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex mt-3 px-4 py-2 bg-brand text-white text-[10px] tracking-widest uppercase font-bold"
+                    >
+                      Live Tracking
+                    </a>
+                  )}
+                </div>
+              )}
 
               {/* Summary */}
               <div className="px-6 py-5 space-y-2.5 bg-zinc-50/50">

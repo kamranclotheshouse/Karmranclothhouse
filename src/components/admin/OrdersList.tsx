@@ -2,17 +2,19 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ORDER_STATUSES, type Order, type OrderStatus } from '@/lib/orders';
+import { getCourierTrackingUrl, ORDER_STATUSES, type Order, type OrderStatus } from '@/lib/orders';
 import type { StoreSettings } from '@/lib/settings';
 import { notify } from '@/components/admin/ui';
 
 const STATUS_MESSAGES: Record<OrderStatus, string> = {
-  pending: 'Your order {id} is received. We will confirm stock shortly, InshaAllah.',
-  confirmed: 'Your order {id} has been confirmed and is being packed.',
+  pending: 'Aap ka order receive ho gaya hai. Stock confirm karke jaldi update denge, InshaAllah.',
+  confirmed: 'Aap ka order confirm ho gaya hai aur packing ke liye ready kiya ja raha hai.',
   dispatched: 'Your order {id} has been dispatched via TCS / Leopards. You will receive it in 2–5 working days.',
-  delivered: 'Your order {id} has been delivered. Thank you for shopping with Kamran Cloth House!',
-  cancelled: 'Your order {id} has been cancelled. Contact us if this was a mistake.',
+  delivered: 'Aap ka order deliver ho gaya hai. Kamran Cloth House se shopping ka shukriya!',
+  cancelled: 'Aap ka order cancel kar diya gaya hai. Agar ye ghalti hai to humein WhatsApp par batayein.',
 };
+
+STATUS_MESSAGES.dispatched = 'Aap ka order dispatch ho gaya hai. Neeche courier aur tracking details di gayi hain.';
 
 function formatMoney(n: number): string {
   return `Rs. ${n.toLocaleString()}`;
@@ -24,12 +26,34 @@ function formatDate(iso: string): string {
 
 function whatsappUpdateUrl(order: Order, status: OrderStatus, settings: StoreSettings): string {
   const message = STATUS_MESSAGES[status].replace('{id}', order.orderNumber);
-  const full =
+  const legacy =
     `السلام علیکم ${order.customerName},\n\n` +
     `${message}\n\n` +
     `Order: ${order.orderNumber}\n` +
     `Total: ${formatMoney(order.totalAmount)} (Cash on Delivery)\n\n` +
     `${settings.storeName} · Saddar, Peshawar`;
+  const items = order.items
+    .map((item) => `• ${item.title}${item.color ? ` (${item.color})` : ''} × ${item.quantity}`)
+    .join('\n');
+  const trackingUrl = getCourierTrackingUrl(order.courierName, order.trackingNumber);
+  const shipment = order.courierName && order.trackingNumber
+    ? `\nCourier: ${order.courierName}\nTracking ID: ${order.trackingNumber}${trackingUrl ? `\nLive tracking: ${trackingUrl}` : ''}`
+    : '';
+  const full = [
+    `Assalam-o-Alaikum ${order.customerName},`,
+    '',
+    message,
+    '',
+    `Order: ${order.orderNumber}`,
+    'Items:',
+    items,
+    '',
+    `Total: ${formatMoney(order.totalAmount)} (Cash on Delivery)`,
+    shipment,
+    '',
+    `${settings.storeName} · Saddar, Peshawar`,
+  ].join('\n');
+  void legacy;
   return `https://wa.me/92${order.customerPhone.replace(/^0?3/, '3').replace(/\D/g, '').slice(-9)}?text=${encodeURIComponent(full)}`;
 }
 
@@ -60,12 +84,28 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
   }, [orders, query, statusFilter]);
 
   const handleStatus = async (orderNumber: string, status: OrderStatus) => {
+    const current = orders.find((order) => order.orderNumber === orderNumber);
+    let shipment: { courierName?: string; trackingNumber?: string } | undefined;
+    if (status === 'dispatched') {
+      const courierName = window.prompt(
+        'Courier ka naam likhein (misal: TCS, Leopards, Trax, PostEx):',
+        current?.courierName ?? ''
+      )?.trim();
+      if (!courierName) return;
+      const trackingNumber = window.prompt(
+        'Courier tracking ID / consignment number likhein:',
+        current?.trackingNumber ?? ''
+      )?.trim();
+      if (!trackingNumber) return;
+      shipment = { courierName, trackingNumber };
+    }
+
     setSaving(orderNumber);
     try {
       const res = await fetch(`/api/orders/${encodeURIComponent(orderNumber)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, ...shipment }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
@@ -158,6 +198,24 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                   {order.items.reduce((n, i) => n + i.quantity, 0)} item(s)
                 </span>
               </div>
+
+              {order.courierName && order.trackingNumber && (
+                <p style={{ fontSize: 12, color: '#6b7280', margin: '0 0 12px' }}>
+                  <strong style={{ color: '#10231C' }}>Courier:</strong> {order.courierName}
+                  {' · '}
+                  <strong style={{ color: '#10231C' }}>Tracking:</strong> {order.trackingNumber}
+                  {getCourierTrackingUrl(order.courierName, order.trackingNumber) && (
+                    <a
+                      href={getCourierTrackingUrl(order.courierName, order.trackingNumber) ?? '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ marginLeft: 8, color: '#7A5F0E', textDecoration: 'underline' }}
+                    >
+                      Live tracking
+                    </a>
+                  )}
+                </p>
+              )}
 
               <p
                 style={{

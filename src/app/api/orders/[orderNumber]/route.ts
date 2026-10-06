@@ -44,6 +44,8 @@ export async function PATCH(request: Request, { params }: Params) {
   const { orderNumber } = await params;
   const body = await readJson(request);
   const status = body?.status;
+  const courierName = typeof body?.courierName === 'string' ? body.courierName.trim() : '';
+  const trackingNumber = typeof body?.trackingNumber === 'string' ? body.trackingNumber.trim() : '';
 
   if (typeof status !== 'string' || !(ORDER_STATUSES as readonly string[]).includes(status)) {
     return NextResponse.json(
@@ -56,8 +58,15 @@ export async function PATCH(request: Request, { params }: Params) {
     );
   }
 
+  if (status === 'dispatched' && (!courierName || !trackingNumber)) {
+    return fail('Dispatched order ke liye courier name aur tracking ID dono zaroori hain.', 422);
+  }
+
   try {
-    const order = await updateOrderStatus(orderNumber, status as OrderStatus);
+    const order = await updateOrderStatus(orderNumber, status as OrderStatus, {
+      courierName: courierName || undefined,
+      trackingNumber: trackingNumber || undefined,
+    });
     return NextResponse.json({ ok: true, order });
   } catch (error) {
     if (error instanceof OrderNotFoundError) return fail('That order no longer exists.', 404);

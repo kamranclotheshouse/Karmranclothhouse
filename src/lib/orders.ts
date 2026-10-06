@@ -48,6 +48,8 @@ export interface Order {
   totalAmount: number;
   paymentMethod: string;
   status: OrderStatus;
+  courierName?: string;
+  trackingNumber?: string;
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
@@ -77,7 +79,23 @@ export interface TrackedOrder {
   deliveryCharges: number;
   totalAmount: number;
   paymentMethod: string;
+  courierName?: string;
+  trackingNumber?: string;
   city: string;
   items: OrderItem[];
   createdAt: string;
+}
+
+/** Best-effort deep links for the couriers commonly used in Pakistan. */
+export function getCourierTrackingUrl(courierName: string | undefined, trackingNumber: string | undefined): string | null {
+  const courier = courierName?.trim().toLowerCase() ?? '';
+  const tracking = trackingNumber?.trim();
+  if (!courier || !tracking) return null;
+  const encoded = encodeURIComponent(tracking);
+  if (courier.includes('leopard')) return `https://www.leopardscourier.com/tracking?cn=${encoded}`;
+  if (courier.includes('postex')) return `https://postex.pk/tracking?tracking_number=${encoded}`;
+  if (courier.includes('trax')) return `https://trax.pk/tracking?tracking_number=${encoded}`;
+  if (courier.includes('tcs')) return `https://www.tcsexpress.com/track/${encoded}`;
+  if (courier.includes('m&p') || courier.includes('m&p')) return `https://www.mulphilog.com/track-shipment/?cn=${encoded}`;
+  return null;
 }

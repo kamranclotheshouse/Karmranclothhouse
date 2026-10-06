@@ -27,6 +27,8 @@ interface OrderRow {
   total_amount: string | number;
   payment_method: string;
   order_status: string;
+  courier_name: string | null;
+  tracking_number: string | null;
   items: unknown;
   customer_notes: string | null;
   created_at: string | Date;
@@ -36,7 +38,7 @@ interface OrderRow {
 const ORDER_COLUMNS = `
   order_number, customer_name, customer_phone, customer_whatsapp,
   delivery_address, city, subtotal, delivery_charges, total_amount,
-  payment_method, order_status, items, customer_notes, created_at, updated_at
+  payment_method, order_status, items, customer_notes, courier_name, tracking_number, created_at, updated_at
 `;
 
 /* ── Mappers ─────────────────────────────────────────────────────────────── */
@@ -81,6 +83,8 @@ function toOrder(row: OrderRow): Order {
     totalAmount: num(row.total_amount),
     paymentMethod: row.payment_method,
     status: row.order_status as OrderStatus,
+    courierName: str(row.courier_name),
+    trackingNumber: str(row.tracking_number),
     items: toOrderItems(row.items),
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
@@ -403,15 +407,23 @@ export function normaliseOrderNumber(value: string): string {
 
 export async function updateOrderStatus(
   orderNumber: string,
-  status: OrderStatus
+  status: OrderStatus,
+  shipment?: { courierName?: string; trackingNumber?: string }
 ): Promise<Order> {
   const rows = await query<OrderRow>(
     `UPDATE orders
         SET order_status = $2,
+            courier_name = COALESCE($3, courier_name),
+            tracking_number = COALESCE($4, tracking_number),
             updated_at   = NOW()
       WHERE order_number = $1
       RETURNING ${ORDER_COLUMNS}`,
-    [normaliseOrderNumber(orderNumber), status]
+    [
+      normaliseOrderNumber(orderNumber),
+      status,
+      shipment?.courierName?.trim() || null,
+      shipment?.trackingNumber?.trim() || null,
+    ]
   );
   if (rows.length === 0) throw new OrderNotFoundError(orderNumber);
   return toOrder(rows[0]);

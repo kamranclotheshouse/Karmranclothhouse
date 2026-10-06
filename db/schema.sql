@@ -120,6 +120,10 @@ CREATE TABLE IF NOT EXISTS orders (
     updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Additive shipment fields for databases created before courier tracking was added.
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS courier_name VARCHAR(100);
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS tracking_number VARCHAR(100);
+
 -- Monotonic order numbers: KCH-1001, KCH-1002, ...
 CREATE SEQUENCE IF NOT EXISTS order_number_seq START 1001;
 
