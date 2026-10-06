@@ -189,7 +189,7 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
         {/* Bottom bar */}
         <div className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs tracking-widest text-zinc-400">
-            © {new Date().getFullYear()} Kamran Cloth House. All rights reserved.
+            © <span suppressHydrationWarning>{new Date().getFullYear()}</span> Kamran Cloth House. All rights reserved.
           </p>
           <p className="text-xs tracking-widest text-zinc-400">
             Shafi Market · Saddar · Peshawar
