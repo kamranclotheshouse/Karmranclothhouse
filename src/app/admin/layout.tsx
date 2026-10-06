@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { AdminLoginForm } from '@/components/admin/LoginForm';
 import { AdminToast } from '@/components/admin/ui';
+import { AdminBusyIndicator } from '@/components/admin/AdminBusyIndicator';
 import { COOKIE_NAME, verifySessionToken } from '@/lib/session';
 import '@/styles/admin.css';
 
@@ -35,10 +36,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="admin-wrapper">
       <AdminNav />
       <main className="admin-content">{children}</main>
+      <AdminBusyIndicator />
       <AdminToast />
     </div>
   );
 }
-
 
 

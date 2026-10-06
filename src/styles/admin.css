@@ -279,6 +279,49 @@
   border-left-color: #FCA5A5;
 }
 
+.admin-busy-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 43, 32, 0.16);
+  backdrop-filter: blur(2px);
+  cursor: wait;
+}
+
+.admin-busy-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface);
+  color: var(--adm-green);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 12px 32px rgba(10, 43, 32, 0.2);
+}
+
+.admin-busy-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(14, 59, 44, 0.16);
+  border-top-color: var(--adm-gold);
+  border-radius: 999px;
+  animation: adminBusySpin 0.75s linear infinite;
+}
+
+@keyframes adminBusySpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-busy-spinner { animation-duration: 1.5s; }
+}
+
 /* ── List Toolbar ─────────────────────────────────────────── */
 .admin-list-toolbar {
   display: flex;
