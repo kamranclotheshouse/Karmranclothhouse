@@ -52,7 +52,17 @@ export default function ContactClient({ settings }: { settings: StoreSettings })
     ];
     if (formData.message.trim()) lines.push(`Message: ${formData.message.trim()}`);
 
-    const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(lines.join('\n'))}`;
+    const romanUrduLines = [
+      `Assalam-o-Alaikum, mujhe ${settings.storeName} se rabta karna hai.`,
+      '',
+      `Name: ${formData.name}`,
+      `Phone: ${formData.phone}`,
+      `City: ${formData.city}`,
+      `Interested in: ${formData.fabricInterest}`,
+      ...(formData.message.trim() ? [`Message: ${formData.message.trim()}`] : []),
+    ];
+    void lines;
+    const url = `https://wa.me/${whatsapp}?text=${encodeURIComponent(romanUrduLines.join('\n'))}`;
     const opened = window.open(url, '_blank', 'noopener,noreferrer');
 
     if (!opened) {

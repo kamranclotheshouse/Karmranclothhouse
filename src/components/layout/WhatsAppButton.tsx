@@ -1,7 +1,7 @@
 'use client';
 
 export default function WhatsAppButton({ whatsappNumber }: { whatsappNumber: string }) {
-  const message = encodeURIComponent('Hello Kamran Cloth House, I have an inquiry.');
+  const message = encodeURIComponent('Assalam-o-Alaikum, mujhe Kamran Cloth House se maloomat chahiye.');
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
   return (
