@@ -18,20 +18,20 @@ const rules = [
     body: 'Because every order is Cash on Delivery, you can open the parcel in front of the courier rider. If anything is wrong, simply refuse the parcel — you pay zero.',
   },
   {
-    title: '7-Day Full Exchange',
-    body: 'Wrong colour, changed your mind, or a defect you spotted at home? Bring or courier it back within 7 days of delivery for a hassle-free exchange.',
+    title: 'Request an Exchange Within 7 Days',
+    body: 'Raise an exchange request within 7 days of delivery. We review the reason and guide you through the next step before you send anything back.',
   },
   {
     title: 'Fabric Must Be Uncut',
     body: 'The suit piece must remain cut-free, unwashed, and unstitched with original tags and packaging intact.',
   },
   {
-    title: 'Lifetime Rang & Burr Guarantee',
-    body: 'Colour fastness and pilling are covered for the lifetime of the fabric. If a piece fades or pills through normal washing, we replace it.',
+    title: 'Defects & Wrong Items',
+    body: 'If we sent the wrong item or the fabric has an issue on arrival, message us promptly with your order number and clear photos. We will review it and arrange the appropriate resolution.',
   },
   {
-    title: 'Courier Coverage',
-    body: 'We cover return courier charges for our mistakes (wrong item or defect). Customer-preference exchanges are shipped back at standard courier cost.',
+    title: 'Courier Charges',
+    body: 'Return courier responsibility is confirmed case by case. We cover reasonable return charges for an approved wrong-item or verified defect claim; preference-based exchanges may be charged to the customer.',
   },
 ];
 
@@ -97,7 +97,7 @@ export default async function ReturnsPage() {
             style={{ backgroundColor: 'var(--color-cream)' }}
           >
             <p className="text-xs text-zinc-700 leading-relaxed">
-              <strong>Need an exchange?</strong> Send your order number (e.g. KCH-1042) and a photo of the parcel to our WhatsApp team. Our Saddar boutique responds within 30 minutes during shop hours.
+              <strong>Need an exchange?</strong> Send your order number, reason and clear photos of the parcel or fabric to our WhatsApp team. Please wait for approval before sending the parcel back.
             </p>
           </div>
 

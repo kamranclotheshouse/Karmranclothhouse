@@ -100,9 +100,8 @@ export default async function PrivacyPage() {
             style={{ backgroundColor: 'var(--color-cream)', borderColor: 'var(--color-border)' }}
           >
             <p className="text-sm leading-relaxed text-zinc-700">
-              Kamran Cloth House (Shafi Market, Saddar, Peshawar) respects your privacy. This policy explains how
-              we handle your information when you shop with us online, on WhatsApp, or in person. Last updated:
-              October 2026.
+              {settings.storeName} ({settings.address}) respects your privacy. This policy explains how we handle
+              your information when you shop with us online, on WhatsApp, or in person. Last updated: October 2026.
             </p>
           </div>
 

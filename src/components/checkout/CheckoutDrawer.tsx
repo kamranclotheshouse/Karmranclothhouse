@@ -572,8 +572,7 @@ export default function CheckoutDrawer({
               </div>
 
               <p className="text-xs text-muted mb-6">
-                Our team will confirm your order via WhatsApp / Call within{' '}
-                <span className="text-ink font-semibold">30 minutes</span>. Delivery in{' '}
+                Our team will confirm your order via WhatsApp / Call during shop hours. Delivery is usually{' '}
                 <span className="text-ink font-semibold">2–5 business days</span>.
               </p>
 

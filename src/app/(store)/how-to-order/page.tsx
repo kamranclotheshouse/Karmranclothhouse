@@ -13,23 +13,23 @@ export async function generateMetadata(): Promise<Metadata> {
 const steps = [
   {
     title: 'Browse & Pick Your Fabric',
-    body: 'Explore categories and brands on this site. Note the product name, price and how many colours it comes in — or simply screenshot what you like.',
+    body: 'Browse products by category or brand, choose a colour and quantity, then tap Order Now. You can also save the product link or screenshot for a WhatsApp order.',
   },
   {
-    title: 'Send Us a WhatsApp Message',
-    body: 'Share the screenshot or product link, the metres you need, and your city. Our team replies within 30 minutes during shop hours.',
+    title: 'Enter Your Delivery Details',
+    body: 'Add your name, WhatsApp number, complete address and city in the checkout drawer. Please double-check your phone number so the courier can reach you.',
   },
   {
     title: 'Stock & Colour Confirmed',
-    body: 'We confirm the exact shade and stock from the Saddar boutique — you can request a real-time photo of the piece on WhatsApp before deciding.',
+    body: 'Our team reviews the order and contacts you on WhatsApp or phone to confirm stock, colour and any special request before dispatch.',
   },
   {
     title: 'Cash on Delivery Dispatch',
-    body: 'Once confirmed, your fabric is folded, poly-packed and handed to TCS, Leopards or PostEx within 24 hours. You get a tracking number — no advance payment.',
+    body: 'After confirmation, your fabric is packed and handed to a registered courier. We share the courier name and tracking number when the order is dispatched. No advance payment is required.',
   },
   {
-    title: 'Inspect, Then Pay the Rider',
-    body: 'Open the parcel in front of the rider, check the fabric, then pay cash. Changed your mind? Refuse delivery at no cost.',
+    title: 'Receive & Pay Cash',
+    body: 'Pay the confirmed Cash on Delivery amount to the courier. If there is a delivery issue, contact us with your order number before cutting, washing or stitching the fabric.',
   },
 ];
 

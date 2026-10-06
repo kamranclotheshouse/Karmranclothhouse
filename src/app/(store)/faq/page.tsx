@@ -13,31 +13,31 @@ export async function generateMetadata(): Promise<Metadata> {
 const faqs = [
   {
     q: 'Is Cash on Delivery available?',
-    a: 'Yes — we deliver nationwide across Pakistan with Cash on Delivery. There is no advance payment. You open the parcel in front of the rider, check the fabric, and pay cash only if you are satisfied.',
+    a: 'Yes — we deliver across Pakistan with Cash on Delivery. There is no advance payment. The final payable amount is shown before dispatch and is paid to the courier on delivery.',
   },
   {
     q: 'How do I place an order?',
-    a: 'Send us a WhatsApp message with the product name or screenshot, the metres you need, and your city. We confirm stock and the exact shade, then dispatch within 24 hours. See the full walkthrough on the How to Order page.',
+    a: 'Tap Order Now on a product, fill in your delivery details and submit the COD order. You can also send the product name or screenshot, quantity and city on WhatsApp. Our team confirms stock before dispatch.',
   },
   {
     q: 'How long does delivery take?',
-    a: 'Orders are dispatched from Saddar, Peshawar within 24 hours of confirmation. Couriers (TCS, Leopards, PostEx) usually deliver in 2–5 business days depending on your city. Full details are on the Delivery Policy page.',
+    a: 'We normally prepare confirmed orders within 1–2 working days. Courier transit is usually 2–5 working days, depending on your city and route. Tracking is shared after dispatch.',
   },
   {
     q: 'Can I check the fabric before paying?',
-    a: 'Absolutely. Open the parcel in front of the delivery rider, inspect the fabric, then pay. If it is not what you expected, you may refuse delivery at no cost.',
+    a: 'Please check the parcel packaging when it arrives. If it is damaged, incorrect or has an obvious issue, contact us immediately with your order number and photos before using the fabric. Courier inspection rules can vary by route.',
   },
   {
     q: 'Is the fabric 100% original?',
-    a: 'Every piece is sourced directly from certified mills — Gul Ahmed, Grace, Pasha Fabrics, Bannu Woolen Mills and other listed brands. We guarantee zero compromise on authenticity.',
+    a: 'Products are sourced from the brand or supplier named on the product page. If you need confirmation for a particular roll or colour, ask us on WhatsApp before ordering.',
   },
   {
     q: 'Will the colour match the photos on the website?',
-    a: 'Screens show colours slightly differently. Many fabrics come in multiple shades — before ordering, ask on WhatsApp and we will send you a real-time photo of the exact piece in natural light.',
+    a: 'Screens can show colours differently from real fabric. Ask us for a current photo or shade confirmation in natural light before placing the order if the exact colour is important.',
   },
   {
     q: 'What if I want to exchange or return something?',
-    a: 'You get a 7-day full exchange — wrong shade, changed your mind, or a defect. Keep the fabric unused and in original condition. See the Returns & Exchanges page for the full policy.',
+    a: 'Exchange requests must be raised within 7 days of delivery. The fabric must be unused, uncut, unwashed and in its original condition. Approval and courier responsibility depend on the reason; see the Returns & Exchanges page.',
   },
   {
     q: 'Do you offer tailoring?',

@@ -34,7 +34,7 @@ const sections = [
   {
     title: 'Payment',
     body: [
-      'Payment is Cash on Delivery — you pay the courier when the parcel arrives. There is no advance payment and no card payment on this website. Open the parcel and inspect the fabric before handing over cash.',
+      'Payment is Cash on Delivery — you pay the courier when the parcel arrives. There is no advance payment and no card payment on this website. Keep the parcel and fabric unused if you need to report an issue or request an exchange.',
     ],
   },
   {
@@ -46,7 +46,7 @@ const sections = [
   {
     title: 'Exchanges & Returns',
     body: [
-      'You may exchange any fabric within 7 days of delivery if it is unused, in original condition, with the parcel and order details. Wrong item or defect? We cover the return courier charge. Full rules live on the Returns & Exchanges page.',
+      'Exchange requests must be raised within 7 days of delivery. The fabric must be unused, uncut, unwashed and in its original condition. Wrong-item and defect claims are reviewed under the Returns & Exchanges policy.',
     ],
   },
   {

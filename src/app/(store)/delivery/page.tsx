@@ -13,19 +13,19 @@ export async function generateMetadata(): Promise<Metadata> {
 const steps = [
   {
     title: 'Order Confirmed',
-    body: 'We confirm stock and colour availability on WhatsApp or phone within 30 minutes during store hours.',
+    body: 'We review your order and confirm stock, colour and any special request on WhatsApp or phone during store hours.',
   },
   {
     title: 'Packed & Handed to Courier',
-    body: 'Your suit piece is folded, poly-packed and handed to TCS, Leopards or PostEx within 24 hours.',
+    body: 'After confirmation, your fabric is folded, packed and handed to a registered courier. The courier may be TCS, Leopards, PostEx or another available partner.',
   },
   {
     title: 'Out for Delivery',
-    body: 'You receive a tracking number. Couriers usually deliver in 2–5 business days depending on your city.',
+    body: 'We share the courier name and tracking number after dispatch. Transit is usually 2–5 working days, depending on your city and route.',
   },
   {
     title: 'Inspect Before Paying',
-    body: 'Open the parcel in front of the rider, check the fabric, then pay cash. You may refuse delivery at no cost.',
+    body: 'Pay the confirmed COD amount when the parcel arrives. If there is a visible issue, contact us immediately with your order number and photos before using the fabric.',
   },
 ];
 
@@ -59,7 +59,7 @@ export default async function DeliveryPage() {
           </h1>
 
           <p className="max-w-xl mx-auto text-sm leading-relaxed font-light" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            Straightforward shipping across Pakistan — no advance payment required, inspect your fabric before paying.
+            Straightforward shipping across Pakistan — no advance payment required.
           </p>
         </div>
       </section>
