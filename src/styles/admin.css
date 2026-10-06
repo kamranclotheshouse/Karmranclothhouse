@@ -333,12 +333,20 @@
 }
 
 .admin-order {
+  margin: 14px 16px;
   padding: 22px 24px;
-  border-bottom: 1px solid var(--adm-border);
-  transition: background-color 150ms ease;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface);
+  box-shadow: var(--adm-shadow-sm);
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
 }
-.admin-order:last-child { border-bottom: none; }
-.admin-order:hover { background-color: rgba(14, 59, 44, 0.02); }
+.admin-order:last-child { border-bottom: 1px solid var(--adm-border); }
+.admin-order:hover {
+  border-color: var(--adm-border-strong);
+  box-shadow: var(--adm-shadow-md);
+  transform: translateY(-1px);
+}
 
 .admin-order-top {
   display: flex;
@@ -1346,7 +1354,7 @@ textarea.admin-input {
   .admin-taxonomy-row { padding: 14px 16px; }
   .admin-taxonomy-actions { width: 100%; margin-left: 0; }
   .admin-taxonomy-actions .admin-btn { flex: 1 1 0; }
-  .admin-order { padding: 18px 16px; }
+  .admin-order { margin: 10px; padding: 18px 16px; }
   .admin-order-top { align-items: flex-start; }
   .admin-order-customer { gap: 4px 12px; }
   .admin-order-customer span + span::before { margin-right: 12px; }
