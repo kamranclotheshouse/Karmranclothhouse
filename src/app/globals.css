@@ -159,6 +159,34 @@
   animation: siteLoadingSpin 0.8s linear infinite;
 }
 
+/* Keep the compact mobile store-info bar readable without wrapping. */
+@media (max-width: 639px) {
+  .store-topbar__track {
+    justify-content: flex-start;
+    max-width: none;
+    animation: topbarMarquee 22s linear infinite;
+    will-change: transform;
+  }
+
+  .store-topbar__address {
+    max-width: none;
+    overflow: visible;
+    text-overflow: clip;
+    white-space: nowrap;
+  }
+}
+
+@keyframes topbarMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-35%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store-topbar__track {
+    animation: none;
+  }
+}
+
 @keyframes siteLoadingSpin {
   to { transform: rotate(360deg); }
 }

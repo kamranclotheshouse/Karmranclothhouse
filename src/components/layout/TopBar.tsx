@@ -18,13 +18,13 @@ export default function TopBar({ settings }: { settings: StoreSettings }) {
   return (
     <div
       style={{ backgroundColor: 'var(--color-green)', color: 'var(--color-gold)' }}
-      className="text-center py-1.5 text-[10px] tracking-[0.35em] uppercase"
+      className="store-topbar overflow-hidden py-1.5 text-center text-[10px] tracking-[0.35em] uppercase"
       role="region"
       aria-label="Store info"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+      <div className="store-topbar__track mx-auto flex w-max max-w-7xl items-center justify-center gap-4 px-4 sm:w-auto sm:px-6 sm:flex-row sm:gap-8">
         {/* Address */}
-        <span className="flex max-w-full items-center gap-1 truncate sm:max-w-none sm:whitespace-nowrap">
+        <span className="store-topbar__address flex max-w-full items-center gap-1 truncate sm:max-w-none sm:whitespace-nowrap">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
