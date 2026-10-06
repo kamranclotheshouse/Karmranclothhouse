@@ -8,6 +8,7 @@
  * needed. Proves the route handlers, validation and data layer work together
  * rather than only in isolation.
  */
+import './env';
 import { execSync, spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -653,22 +654,24 @@ async function main() {
     // ── orders: checkout → database → admin ────────────────────────────────
     console.log('\n── orders ───────────────────────────────────────────────\n');
 
+    // The server verifies every line against the catalogue and rebuilds all
+    // money from DB records — the client only names the products it wants.
     const orderPayload = {
       customerName: 'Test Customer',
       customerPhone: '03001234567',
       deliveryAddress: 'House 12, Street 4, Gulberg III',
       city: 'Lahore',
-      subtotal: 4500,
-      deliveryCharges: 0,
+      subtotal: 3999,
+      deliveryCharges: 250,
       items: [
         {
-          slug: 'royal-karandi-charcoal',
-          title: 'Royal Karandi — Charcoal Grey',
-          brand: 'Gul Ahmed',
-          color: 'Charcoal',
+          slug: 'royal-galaxy-cotton',
+          title: 'Royal Galaxy Cotton',
+          brand: 'Royal Galaxy',
+          color: '',
           quantity: 1,
-          price: 4500,
-          image: '/images/product-01.jpg',
+          price: 3999,
+          image: '',
         },
       ],
     };
@@ -684,8 +687,10 @@ async function main() {
       `got ${created.order?.orderNumber}`);
     check('order starts pending', created.order?.status === 'pending',
       `got ${created.order?.status}`);
-    check('server recomputed the total', created.order?.totalAmount === 4500,
-      `got ${created.order?.totalAmount}`);
+    check('server recomputed the subtotal from the catalogue',
+      created.order?.subtotal === 3999, `got ${created.order?.subtotal}`);
+    check('server added the delivery fee itself',
+      created.order?.totalAmount === 4249, `got ${created.order?.totalAmount}`);
     const orderNumber = created.order?.orderNumber as string;
 
     const badPhone = await fetch(`${BASE}/api/orders`, {
@@ -706,12 +711,31 @@ async function main() {
     });
     check('unknown city rejected', badCity.status === 422, `got ${badCity.status}`);
 
+    const unknownItem = await fetch(`${BASE}/api/orders`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        ...orderPayload,
+        items: [{ ...orderPayload.items[0], slug: 'does-not-exist', price: 1 }],
+      }),
+    });
+    check('unknown product rejected', unknownItem.status === 422, `got ${unknownItem.status}`);
+
     const tampered = await fetch(`${BASE}/api/orders`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ ...orderPayload, subtotal: 100 }),
+      body: JSON.stringify({
+        ...orderPayload,
+        subtotal: 100,
+        deliveryCharges: 0,
+        items: [{ ...orderPayload.items[0], price: 1 }],
+      }),
     });
-    check('subtotal tampering rejected', tampered.status === 422, `got ${tampered.status}`);
+    const tamperedBody = await tampered.json();
+    check('tampered prices are ignored by the server',
+      tampered.status === 201 && tamperedBody.order?.subtotal === 3999 &&
+        tamperedBody.order?.totalAmount === 4249,
+      `got ${tampered.status} subtotal ${tamperedBody.order?.subtotal}`);
 
     const adminOrdersUnauth = await fetch(`${BASE}/api/orders`);
     check('order list requires sign-in', adminOrdersUnauth.status === 401,
@@ -723,15 +747,20 @@ async function main() {
         adminOrders.orders.some((o: { orderNumber: string }) => o.orderNumber === orderNumber),
       `got ${adminOrders.orders?.length} orders`);
 
-    const tracked = await fetch(`${BASE}/api/orders/${orderNumber}`);
+    const tracked = await fetch(`${BASE}/api/orders/${orderNumber}?phone=03001234567`);
     const trackedBody = await tracked.json();
-    check('anyone can track by order number', tracked.status === 200, `got ${tracked.status}`);
+    check('tracking works with order number + phone', tracked.status === 200,
+      `got ${tracked.status}`);
     check('tracking shows the status', trackedBody.order?.status === 'pending');
     check('tracking hides the customer name', !('customerName' in (trackedBody.order ?? {})));
     check('tracking hides the phone', !('customerPhone' in (trackedBody.order ?? {})));
     check('tracking hides the address', !('deliveryAddress' in (trackedBody.order ?? {})));
 
-    const trackUnknown = await fetch(`${BASE}/api/orders/KCH-999999`);
+    const wrongPhone = await fetch(`${BASE}/api/orders/${orderNumber}?phone=03999999999`);
+    check('tracking with the wrong phone 404s', wrongPhone.status === 404,
+      `got ${wrongPhone.status}`);
+
+    const trackUnknown = await fetch(`${BASE}/api/orders/KCH-999999?phone=03001234567`);
     check('unknown order number 404s', trackUnknown.status === 404, `got ${trackUnknown.status}`);
 
     const patchUnauth = await fetch(`${BASE}/api/orders/${orderNumber}`, {

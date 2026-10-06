@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, readJson, fail } from '@/lib/admin/api';
-import { createOrder, listOrders, validateOrderInput } from '@/lib/db/orders';
+import { createOrder, listOrders, prepareOrderInput } from '@/lib/db/orders';
 import { ORDER_STATUSES, type NewOrderInput, type OrderStatus } from '@/lib/orders';
 
 export const dynamic = 'force-dynamic';
@@ -16,13 +16,16 @@ export async function POST(request: Request) {
   if (!body) return fail('Order data could not be read. Please try again.', 422);
 
   const input = body as unknown as NewOrderInput;
-  const invalid = validateOrderInput(input);
-  if (invalid) {
-    return NextResponse.json({ ok: false, error: invalid.error, fields: invalid.fields }, { status: 422 });
+  const prepared = await prepareOrderInput(input);
+  if (!prepared.input || prepared.error) {
+    return NextResponse.json(
+      { ok: false, error: prepared.error?.error, fields: prepared.error?.fields },
+      { status: 422 }
+    );
   }
 
   try {
-    const order = await createOrder(input);
+    const order = await createOrder(prepared.input);
     return NextResponse.json({ ok: true, order }, { status: 201 });
   } catch (error) {
     console.error('[orders] create failed:', error);

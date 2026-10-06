@@ -19,6 +19,18 @@ interface CheckoutDrawerProps {
 
 type OrderStep = 'form' | 'success';
 
+interface PlacedOrderSummary {
+  orderNumber: string;
+  items: CartItem[];
+  subtotal: number;
+  deliveryFee: number;
+  total: number;
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string;
+  city: string;
+}
+
 export default function CheckoutDrawer({
   isOpen,
   onClose,
@@ -28,6 +40,7 @@ export default function CheckoutDrawer({
 }: CheckoutDrawerProps) {
   const [step, setStep] = useState<OrderStep>('form');
   const [orderId, setOrderId] = useState('');
+  const [placedOrder, setPlacedOrder] = useState<PlacedOrderSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [citySearch, setCitySearch] = useState('');
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
@@ -47,6 +60,13 @@ export default function CheckoutDrawer({
   const wasOpen = useRef(false);
   useEffect(() => {
     if (isOpen && !wasOpen.current && items.length > 0) {
+      // A drawer stays mounted after closing. Start every new checkout from a
+      // clean form, while retaining the last order in its own immutable snapshot.
+      setStep('form');
+      setOrderId('');
+      setPlacedOrder(null);
+      setErrors({});
+      setSubmitError('');
       trackAddToCart(
         items.map((i) => ({ slug: i.slug, name: i.name, price: i.price, quantity: i.quantity }))
       );
@@ -140,12 +160,36 @@ export default function CheckoutDrawer({
         return;
       }
 
+      const savedItems: CartItem[] = data.order.items.map((item) => ({
+        slug: item.slug,
+        name: item.title,
+        brand: item.brand,
+        color: item.color,
+        quantity: item.quantity,
+        price: item.price,
+        image: item.image,
+      }));
+      setPlacedOrder({
+        orderNumber: data.order.orderNumber,
+        items: savedItems,
+        subtotal: data.order.subtotal,
+        deliveryFee: data.order.deliveryCharges,
+        total: data.order.totalAmount,
+        customerName: data.order.customerName,
+        customerPhone: data.order.customerPhone,
+        deliveryAddress: data.order.deliveryAddress,
+        city: data.order.city,
+      });
       setOrderId(data.order.orderNumber);
       setStep('success');
       trackPurchase({
         orderNumber: data.order.orderNumber,
-        value: total,
-        items: items.map((i) => ({ slug: i.slug, quantity: i.quantity, price: i.price })),
+        value: data.order.totalAmount,
+        items: data.order.items.map((item) => ({
+          slug: item.slug,
+          quantity: item.quantity,
+          price: item.price,
+        })),
       });
       onPlaced?.();
     } catch {
@@ -157,7 +201,11 @@ export default function CheckoutDrawer({
     }
   };
 
-  const orderLines = items
+  const confirmedItems = placedOrder?.items ?? [];
+  const confirmedTotal = placedOrder?.total ?? 0;
+  const confirmedDeliveryFee = placedOrder?.deliveryFee ?? 0;
+
+  const orderLines = confirmedItems
     .map(
       (item) =>
         `• ${item.name} (${item.brand})${item.color ? ` — ${item.color}` : ''} × ${item.quantity} = Rs. ${(
@@ -169,14 +217,14 @@ export default function CheckoutDrawer({
   const whatsappConfirmMsg = encodeURIComponent(
     `السلام علیکم ${settings.storeName}،\n\n` +
       `میرا COD Order Confirm ہو گیا:\n\n` +
-      `Order ID: ${orderId}\n` +
-      `Items:\n${orderLines}\n` +
-      `Total: Rs. ${total.toLocaleString()}${
-        deliveryFee === 0 ? ' (Free Delivery)' : ` (including Rs. ${deliveryFee} delivery)`
+    `Order ID: ${orderId}\n` +
+    `Items:\n${orderLines}\n` +
+      `Total: Rs. ${confirmedTotal.toLocaleString()}${
+        confirmedDeliveryFee === 0 ? ' (Free Delivery)' : ` (including Rs. ${confirmedDeliveryFee} delivery)`
       }\n\n` +
-      `Name: ${form.name}\n` +
-      `Phone: ${form.phone}\n` +
-      `Address: ${form.address}, ${form.city}`
+      `Name: ${placedOrder?.customerName ?? form.name}\n` +
+      `Phone: ${placedOrder?.customerPhone ?? form.phone}\n` +
+      `Address: ${placedOrder?.deliveryAddress ?? form.address}, ${placedOrder?.city ?? form.city}`
   );
 
   return (
@@ -483,7 +531,7 @@ export default function CheckoutDrawer({
               <div className="bg-cream border border-line p-5 text-left mb-6 space-y-2.5">
                 <div className="space-y-1.5 pb-2.5 border-b border-line">
                   <p className="text-muted uppercase tracking-wider text-xs">Items Ordered</p>
-                  {items.map((item) => (
+                  {confirmedItems.map((item) => (
                     <div key={`${item.slug}::${item.color}`} className="flex justify-between gap-3 text-xs">
                       <span className="text-ink font-medium">
                         {item.name}
@@ -501,11 +549,11 @@ export default function CheckoutDrawer({
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-muted uppercase tracking-wider">City</span>
-                  <span className="text-ink font-medium">{form.city}</span>
+                  <span className="text-ink font-medium">{placedOrder?.city}</span>
                 </div>
                 <div className="flex justify-between text-xs pt-2.5 border-t border-line">
                   <span className="text-ink font-bold uppercase tracking-wider">Total COD Amount</span>
-                  <span className="text-ink font-bold text-base">Rs. {total.toLocaleString()}</span>
+                  <span className="text-ink font-bold text-base">Rs. {confirmedTotal.toLocaleString()}</span>
                 </div>
               </div>
 

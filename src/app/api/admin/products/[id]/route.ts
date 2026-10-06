@@ -15,8 +15,8 @@ import { validateProduct, hasErrors, type ProductFormValues } from '@/lib/admin/
 
 type Params = { params: Promise<{ id: string }> };
 
-function s(body: Record<string, unknown>, key: string): string {
-  return typeof body[key] === 'string' ? (body[key] as string) : '';
+function optionalString(body: Record<string, unknown>, key: string): string | undefined {
+  return typeof body[key] === 'string' ? (body[key] as string) : undefined;
 }
 
 function num(value: string): number | undefined {
@@ -53,22 +53,24 @@ export async function PATCH(request: Request, { params }: Params) {
   // Merge onto the current row so validation sees the complete record, not
   // just the fields that happen to be in this request.
   const values: ProductFormValues = {
-    title: s(body, 'title') || existing.name,
-    slug: s(body, 'slug') || existing.slug,
-    price: s(body, 'price') || String(existing.price),
-    compareAtPrice: s(body, 'compareAtPrice') ?? (existing.compareAtPrice ? String(existing.compareAtPrice) : ''),
-    stockQuantity: s(body, 'stockQuantity') || String(existing.stockQuantity),
-    brandSlug: s(body, 'brandSlug') || existing.brandSlug,
-    categorySlug: s(body, 'categorySlug') || existing.categorySlug,
-    description: s(body, 'description') || existing.description,
-    fabricType: s(body, 'fabricType') || existing.fabricType,
-    length: s(body, 'length') || existing.length,
-    width: s(body, 'width') || existing.width,
-    season: s(body, 'season') || existing.season,
-    weaveType: s(body, 'weaveType') || existing.weaveType,
-    badge: s(body, 'badge') || (existing.badge ?? ''),
-    sku: s(body, 'sku') || (existing.sku ?? ''),
-    imageAlt: s(body, 'imageAlt') || (existing.imageAlt ?? ''),
+    title: optionalString(body, 'title') ?? existing.name,
+    slug: optionalString(body, 'slug') ?? existing.slug,
+    price: optionalString(body, 'price') ?? String(existing.price),
+    compareAtPrice:
+      optionalString(body, 'compareAtPrice') ??
+      (existing.compareAtPrice ? String(existing.compareAtPrice) : ''),
+    stockQuantity: optionalString(body, 'stockQuantity') ?? String(existing.stockQuantity),
+    brandSlug: optionalString(body, 'brandSlug') ?? existing.brandSlug,
+    categorySlug: optionalString(body, 'categorySlug') ?? existing.categorySlug,
+    description: optionalString(body, 'description') ?? existing.description,
+    fabricType: optionalString(body, 'fabricType') ?? existing.fabricType,
+    length: optionalString(body, 'length') ?? existing.length,
+    width: optionalString(body, 'width') ?? existing.width,
+    season: optionalString(body, 'season') ?? existing.season,
+    weaveType: optionalString(body, 'weaveType') ?? existing.weaveType,
+    badge: optionalString(body, 'badge') ?? (existing.badge ?? ''),
+    sku: optionalString(body, 'sku') ?? (existing.sku ?? ''),
+    imageAlt: optionalString(body, 'imageAlt') ?? (existing.imageAlt ?? ''),
   };
 
   const errors = validateProduct(values);

@@ -24,6 +24,7 @@ function formatDate(iso: string): string {
 
 export default function TrackPage() {
   const [query, setQuery] = useState('');
+  const [phone, setPhone] = useState('');
   const [order, setOrder] = useState<TrackedOrder | null>(null);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState('');
@@ -33,12 +34,18 @@ export default function TrackPage() {
     e.preventDefault();
     const value = query.trim();
     if (!value) return;
+    const phoneNumber = phone.replace(/[-\s]/g, '');
+    if (!/^03\d{9}$/.test(phoneNumber)) {
+      setError('Apna order wala valid mobile number (03XXXXXXXXX) likhein.');
+      setSearched(true);
+      return;
+    }
     setBusy(true);
     setOrder(null);
     setSearched(false);
     setError('');
     try {
-      const res = await fetch(`/api/orders/${encodeURIComponent(value)}`, {
+      const res = await fetch(`/api/orders/${encodeURIComponent(value)}?phone=${encodeURIComponent(phoneNumber)}`, {
         headers: { Accept: 'application/json' },
       });
       const data = (await res.json()) as { ok: boolean; error?: string; order?: TrackedOrder };
@@ -47,7 +54,7 @@ export default function TrackPage() {
       } else {
         setError(
           res.status === 404
-            ? 'No order found with that number. Check the KCH-XXXX from your confirmation message.'
+            ? 'No matching order found. Order number aur mobile number dobara check karein.'
             : data.error ?? 'Could not look up your order. Please try again.'
         );
       }
@@ -88,7 +95,7 @@ export default function TrackPage() {
           </h1>
 
           <p className="max-w-md mx-auto text-sm leading-relaxed font-light" style={{ color: 'rgba(255,255,255,0.85)' }}>
-            Enter your order number (e.g.{' '}
+            Enter your order number and the mobile number used at checkout (e.g.{' '}
             <span className="font-semibold text-white font-mono" style={{ color: '#C9A227' }}>KCH-1042</span>) to see your order, its items and current status. Our team updates the status as your order is confirmed, dispatched and delivered.
           </p>
         </div>
@@ -105,6 +112,14 @@ export default function TrackPage() {
               placeholder="e.g. KCH-1042"
               className="flex-1 px-4 py-4 bg-white text-sm text-ink font-mono border border-line focus:outline-none focus:border-[#C9A227] transition-colors uppercase"
               aria-label="Order number"
+            />
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Mobile: 03001234567"
+              className="flex-1 px-4 py-4 bg-white text-sm text-ink font-mono border border-line focus:outline-none focus:border-[#C9A227] transition-colors"
+              aria-label="Mobile number used for the order"
             />
             <button
               type="submit"

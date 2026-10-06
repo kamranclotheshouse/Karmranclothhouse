@@ -11,16 +11,24 @@ import { createHmac, timingSafeEqual } from 'node:crypto';
 const COOKIE_NAME = 'kch_admin_session';
 const DEFAULT_TTL_MS = 1000 * 60 * 60 * 12; // 12 hours
 
-function getSecret(): string {
+function getSecret(): string | null {
   const secret = process.env.ADMIN_SESSION_SECRET;
   if (secret && secret.length >= 16) return secret;
-  // Dev fallback keeps `npm run dev` working without setup. Production must set
-  // a real secret — see .env.example.
-  return 'kch-dev-only-session-secret-change-me';
+  // Keep local development convenient, but never allow a predictable signing
+  // secret to authenticate an admin in production.
+  return process.env.NODE_ENV === 'production'
+    ? null
+    : 'kch-dev-only-session-secret-change-me';
 }
 
 function sign(expiry: number): string {
-  return createHmac('sha256', getSecret()).update(String(expiry)).digest('hex');
+  const secret = getSecret();
+  if (!secret) throw new Error('ADMIN_SESSION_SECRET is not configured.');
+  return createHmac('sha256', secret).update(String(expiry)).digest('hex');
+}
+
+export function isSessionSecretConfigured(): boolean {
+  return getSecret() !== null;
 }
 
 export function createSessionToken(ttlMs: number = DEFAULT_TTL_MS): string {
@@ -36,7 +44,9 @@ export function verifySessionToken(token: string | undefined | null): boolean {
   const expiry = Number(expiryRaw);
   if (!Number.isFinite(expiry) || Date.now() > expiry) return false;
 
-  const expected = sign(expiry);
+  const secret = getSecret();
+  if (!secret) return false;
+  const expected = createHmac('sha256', secret).update(String(expiry)).digest('hex');
   const a = Buffer.from(mac, 'utf8');
   const b = Buffer.from(expected, 'utf8');
   if (a.length !== b.length) return false;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, readJson, fail } from '@/lib/admin/api';
-import { getOrder, updateOrderStatus, OrderNotFoundError } from '@/lib/db/orders';
+import { getOrderForTracking, updateOrderStatus, OrderNotFoundError } from '@/lib/db/orders';
 import { ORDER_STATUSES, type OrderStatus } from '@/lib/orders';
 
 export const dynamic = 'force-dynamic';
@@ -10,15 +10,15 @@ type Params = { params: Promise<{ orderNumber: string }> };
 /**
  * GET /api/orders/[orderNumber] — public, for the `/track` page.
  *
- * Returns only `TrackedOrder` fields. Anyone who knows (or guesses) the number
- * can see the status of an order, but never the customer's name, phone or
- * address.
+ * Returns only `TrackedOrder` fields after the customer's phone number is
+ * verified. This prevents sequential order numbers being used for lookup.
  */
-export async function GET(_request: Request, { params }: Params) {
+export async function GET(request: Request, { params }: Params) {
   const { orderNumber } = await params;
+  const phone = new URL(request.url).searchParams.get('phone') ?? '';
 
   try {
-    const order = await getOrder(orderNumber);
+    const order = await getOrderForTracking(orderNumber, phone);
     if (!order) return fail('No order found with that number.', 404);
 
     const { customerName, customerPhone, customerAltPhone, deliveryAddress, specialInstructions, updatedAt, ...tracked } = order;

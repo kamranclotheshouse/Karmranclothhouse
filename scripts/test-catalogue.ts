@@ -47,6 +47,7 @@ async function main() {
     slugIsTaken,
     NotFoundError,
   } = await import('../src/lib/db/catalogue');
+  const { prepareOrderInput, createOrder, getOrderForTracking } = await import('../src/lib/db/orders');
   const { categories: seedCategories, brands: seedBrands, products: seedProducts } =
     await import('../src/lib/data');
 
@@ -76,6 +77,65 @@ async function main() {
   const bySlug = await getProductBySlug(seeded[0].slug);
   check('getProductBySlug matches list entry', bySlug?.name === seeded[0].name);
   check('getProductBySlug returns null for unknown', (await getProductBySlug('nope')) === null);
+
+  const preparedOrder = await prepareOrderInput({
+    customerName: 'Ali Khan',
+    customerPhone: '03001234567',
+    deliveryAddress: 'House 12, Street 4, Gulberg',
+    city: 'Peshawar',
+    // Deliberately forged values: only slug + quantity may influence the
+    // server-calculated order price.
+    subtotal: 1,
+    deliveryCharges: 0,
+    items: [{
+      slug: seeded[0].slug,
+      title: 'Forged title',
+      brand: 'Forged brand',
+      color: '',
+      quantity: 1,
+      price: 1,
+      image: 'https://attacker.invalid/image.jpg',
+    }],
+  });
+  check(
+    'order price comes from the catalogue',
+    preparedOrder.input?.items[0].price === seeded[0].price &&
+      preparedOrder.input.subtotal === seeded[0].price
+  );
+  check(
+    'order display data comes from the catalogue',
+    preparedOrder.input?.items[0].title === seeded[0].name &&
+      preparedOrder.input?.items[0].brand === seeded[0].brand
+  );
+  check(
+    'unknown product is rejected before order creation',
+    Boolean(
+      (
+        await prepareOrderInput({
+          customerName: 'Ali Khan',
+          customerPhone: '03001234567',
+          deliveryAddress: 'House 12, Street 4, Gulberg',
+          city: 'Peshawar',
+          subtotal: 0,
+          deliveryCharges: 0,
+          items: [
+            { slug: 'missing-product', title: '', brand: '', color: '', quantity: 1, price: 0, image: '' },
+          ],
+        })
+      ).error
+    )
+  );
+  if (preparedOrder.input) {
+    const createdOrder = await createOrder(preparedOrder.input);
+    check(
+      'tracking needs the matching customer phone number',
+      (await getOrderForTracking(createdOrder.orderNumber, '03001234567'))?.orderNumber ===
+        createdOrder.orderNumber &&
+        (await getOrderForTracking(createdOrder.orderNumber, '03009999999')) === null
+    );
+  } else {
+    check('tracking needs the matching customer phone number', false);
+  }
 
   console.log('\n── create ────────────────────────────────────────────────\n');
 

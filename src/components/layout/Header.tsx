@@ -203,8 +203,22 @@ export default function Header({ settings }: { settings: StoreSettings }) {
                 className="relative h-full flex items-center"
                 onMouseEnter={() => setHoverCategories(true)}
                 onMouseLeave={() => setHoverCategories(false)}
+                onFocus={() => setHoverCategories(true)}
+                onBlur={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget)) {
+                    setHoverCategories(false);
+                  }
+                }}
               >
                 <button
+                  type="button"
+                  onClick={() => setHoverCategories((open) => !open)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                      setHoverCategories(false);
+                      event.currentTarget.blur();
+                    }
+                  }}
                   className="px-3 py-2 text-sm font-medium transition-opacity hover:opacity-70 flex items-center gap-1"
                   style={{ fontFamily: "'Outfit', sans-serif", color: '#C9A227' }}
                   aria-haspopup="true"

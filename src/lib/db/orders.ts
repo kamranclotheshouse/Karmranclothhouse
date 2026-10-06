@@ -9,6 +9,9 @@
  */
 import { query } from './driver';
 import { PAKISTAN_CITIES, type NewOrderInput, type Order, type OrderStatus, type TrackedOrder } from '../orders';
+import { getProductBySlug } from './catalogue';
+import { getStoreSettings } from './settings';
+import { getDeliveryFee } from '../settings';
 
 /* ── Row shape (snake_case, straight off the wire) ───────────────────────── */
 
@@ -107,14 +110,15 @@ const ALLOWED_CITIES = new Set(PAKISTAN_CITIES);
 
 const MAX_TOTAL = 500_000;
 const MAX_ITEMS = 30;
+const text = (value: unknown): string => (typeof value === 'string' ? value : '');
 
 /** Plain-language errors the checkout can show as-is. */
 export function validateOrderInput(input: NewOrderInput): OrderValidationError | null {
   const fields: Record<string, string> = {};
-  const name = (input.customerName ?? '').trim();
-  const phone = (input.customerPhone ?? '').replace(/[-\s()]/g, '');
-  const address = (input.deliveryAddress ?? '').trim();
-  const city = (input.city ?? '').trim();
+  const name = text(input.customerName).trim();
+  const phone = text(input.customerPhone).replace(/[-\s()]/g, '');
+  const address = text(input.deliveryAddress).trim();
+  const city = text(input.city).trim();
 
   if (name.length < 2) fields.customerName = 'Apna poora naam likhein, jaise Ali Khan.';
   else if (name.length > 150) fields.customerName = 'Naam 150 characters se chhota rakhein.';
@@ -134,7 +138,7 @@ export function validateOrderInput(input: NewOrderInput): OrderValidationError |
     fields.city = 'Sirf diye hue shehron mein se choose karein, jaise Peshawar.';
   }
 
-  const alt = (input.customerAltPhone ?? '').replace(/[-\s()]/g, '');
+  const alt = text(input.customerAltPhone).replace(/[-\s()]/g, '');
   if (alt && !/^03\d{9}$/.test(alt)) {
     fields.customerAltPhone = 'Doosra number bhi 03XXXXXXXXX ki tarah likhein.';
   }
@@ -145,39 +149,17 @@ export function validateOrderInput(input: NewOrderInput): OrderValidationError |
     fields.items = `Ek order mein ${MAX_ITEMS} se zyada items nahi ho sakte.`;
   } else {
     input.items.forEach((item, i) => {
+      if (!item || typeof item !== 'object') {
+        fields[`items.${i}`] = `Item ${i + 1} ka data theek nahi hai.`;
+        return;
+      }
       if (!Number.isFinite(item.quantity) || item.quantity < 1 || item.quantity > 99) {
         fields[`items.${i}.quantity`] = `Item ${i + 1}: quantity 1 se 99 ke beech ho, jaise 2.`;
       }
-      if (!Number.isFinite(item.price) || item.price < 0) {
-        fields[`items.${i}.price`] = `Item ${i + 1}: price sirf numbers ho, jaise 4500.`;
+      if (!text(item.slug).trim()) {
+        fields[`items.${i}.slug`] = `Item ${i + 1} ka product missing hai.`;
       }
     });
-  }
-
-  if (!Number.isFinite(input.subtotal) || input.subtotal < 0) {
-    fields.subtotal = 'Subtotal sirf numbers ho, jaise 4500.';
-  } else if (input.subtotal > MAX_TOTAL) {
-    fields.subtotal = `Subtotal Rs. ${MAX_TOTAL.toLocaleString()} se zyada nahi ho sakta.`;
-  }
-
-  if (!Number.isFinite(input.deliveryCharges) || input.deliveryCharges < 0) {
-    fields.deliveryCharges = 'Delivery charges sirf numbers ho, jaise 0.';
-  }
-
-  const items = Array.isArray(input.items) ? input.items : [];
-  const itemsTotal = items.reduce(
-    (sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0),
-    0
-  );
-  // The client sends a subtotal it computed; recompute and accept a small
-  // rounding gap so a stale cart total cannot be used to underpay.
-  if (itemsTotal > 0 && Math.abs(itemsTotal - Number(input.subtotal)) > 1) {
-    fields.subtotal = `Subtotal ${itemsTotal.toLocaleString()} hona chahiye (${items.length} item ke hisaab se).`;
-  }
-
-  const total = Number(input.subtotal) + Number(input.deliveryCharges);
-  if (!Number.isFinite(total) || total < 0 || total > MAX_TOTAL) {
-    fields.subtotal = `Total Rs. ${MAX_TOTAL.toLocaleString()} se zyada nahi ho sakta.`;
   }
 
   if (Object.keys(fields).length > 0) {
@@ -187,6 +169,90 @@ export function validateOrderInput(input: NewOrderInput): OrderValidationError |
     };
   }
   return null;
+}
+
+/**
+ * The browser only identifies the requested products. Titles, prices, images,
+ * delivery charges and totals are all rebuilt from the current server records
+ * before an order is written.
+ */
+export async function prepareOrderInput(input: NewOrderInput): Promise<{
+  input?: NewOrderInput;
+  error?: OrderValidationError;
+}> {
+  const invalid = validateOrderInput(input);
+  if (invalid) return { error: invalid };
+
+  const fields: Record<string, string> = {};
+  const requestedItems = input.items;
+  const requestedQuantityBySlug = new Map<string, number>();
+  for (const requested of requestedItems) {
+    const slug = text(requested.slug).trim();
+    requestedQuantityBySlug.set(slug, (requestedQuantityBySlug.get(slug) ?? 0) + requested.quantity);
+  }
+  const verifiedItems = await Promise.all(
+    requestedItems.map(async (requested, index) => {
+      const slug = text(requested.slug).trim();
+      const product = await getProductBySlug(slug);
+      if (!product) {
+        fields[`items.${index}.slug`] = `Item ${index + 1} ab available nahi hai.`;
+        return null;
+      }
+      if (!product.isInStock || product.stockQuantity < (requestedQuantityBySlug.get(slug) ?? 0)) {
+        fields[`items.${index}.quantity`] = `${product.name} ki requested quantity ab available nahi hai.`;
+        return null;
+      }
+
+      const requestedColor = text(requested.color).trim();
+      const color = product.colors.find((entry) => entry.name === requestedColor);
+      if (product.colors.length > 0 && (!color || !color.inStock)) {
+        fields[`items.${index}.color`] = `${product.name} ka selected color ab available nahi hai.`;
+        return null;
+      }
+
+      return {
+        slug: product.slug,
+        title: product.name,
+        brand: product.brand,
+        color: color?.name ?? '',
+        quantity: requested.quantity,
+        price: product.price,
+        image: product.images[0] ?? '',
+      };
+    })
+  );
+
+  if (Object.keys(fields).length > 0) {
+    return { error: { error: Object.values(fields)[0], fields } };
+  }
+
+  const items = verifiedItems.filter((item): item is Order['items'][number] => item !== null);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const settings = await getStoreSettings();
+  const deliveryCharges = getDeliveryFee(settings, subtotal);
+
+  if (subtotal + deliveryCharges > MAX_TOTAL) {
+    return {
+      error: {
+        error: `Total Rs. ${MAX_TOTAL.toLocaleString()} se zyada nahi ho sakta.`,
+        fields: { subtotal: `Total Rs. ${MAX_TOTAL.toLocaleString()} se zyada nahi ho sakta.` },
+      },
+    };
+  }
+
+  return {
+    input: {
+      customerName: text(input.customerName).trim(),
+      customerPhone: text(input.customerPhone).replace(/[-\s()]/g, ''),
+      customerAltPhone: text(input.customerAltPhone).replace(/[-\s()]/g, ''),
+      deliveryAddress: text(input.deliveryAddress).trim(),
+      city: text(input.city).trim(),
+      specialInstructions: text(input.specialInstructions).trim(),
+      subtotal,
+      deliveryCharges,
+      items,
+    },
+  };
 }
 
 /* ── Queries ─────────────────────────────────────────────────────────────── */
@@ -307,6 +373,24 @@ export async function getOrder(orderNumber: string): Promise<Order | null> {
   const rows = await query<OrderRow>(
     `SELECT ${ORDER_COLUMNS} FROM orders WHERE order_number = $1`,
     [normaliseOrderNumber(orderNumber)]
+  );
+  return rows.length > 0 ? toOrder(rows[0]) : null;
+}
+
+/** Public tracking requires the order number and the customer's phone number. */
+export async function getOrderForTracking(orderNumber: string, phone: string): Promise<Order | null> {
+  const normalisedPhone = phone.replace(/[-\s()]/g, '');
+  if (!/^03\d{9}$/.test(normalisedPhone)) return null;
+
+  const rows = await query<OrderRow>(
+    `SELECT ${ORDER_COLUMNS}
+       FROM orders
+      WHERE order_number = $1
+        AND (
+          regexp_replace(customer_phone, '\\D', '', 'g') = $2
+          OR regexp_replace(COALESCE(customer_whatsapp, ''), '\\D', '', 'g') = $2
+        )`,
+    [normaliseOrderNumber(orderNumber), normalisedPhone]
   );
   return rows.length > 0 ? toOrder(rows[0]) : null;
 }

@@ -544,6 +544,7 @@
 /* ── Login ────────────────────────────────────────────────── */
 .admin-login {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -559,6 +560,33 @@
   border-radius: var(--adm-radius);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   border-top: 4px solid var(--adm-gold);
+}
+
+.admin-login-logo {
+  display: block;
+  width: 76px;
+  height: auto;
+  margin: 0 auto 14px;
+}
+
+.admin-login-submit {
+  width: 100%;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  font-size: 13px;
+}
+
+.admin-login-back {
+  display: block;
+  margin-top: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--adm-muted);
+  text-decoration: none;
+}
+.admin-login-back:hover {
+  color: var(--adm-green);
+  text-decoration: underline;
 }
 
 .admin-login-title {

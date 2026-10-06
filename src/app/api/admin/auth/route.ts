@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import { checkPin, createSessionToken, COOKIE_NAME, DEFAULT_TTL_MS } from '@/lib/session';
+import {
+  checkPin,
+  createSessionToken,
+  COOKIE_NAME,
+  DEFAULT_TTL_MS,
+  isSessionSecretConfigured,
+} from '@/lib/session';
 
 export async function POST(request: Request) {
   let pin = '';
@@ -13,6 +19,13 @@ export async function POST(request: Request) {
   if (!process.env.ADMIN_PIN) {
     return NextResponse.json(
       { ok: false, error: 'ADMIN_PIN is not configured on the server.' },
+      { status: 503 }
+    );
+  }
+
+  if (!isSessionSecretConfigured()) {
+    return NextResponse.json(
+      { ok: false, error: 'ADMIN_SESSION_SECRET is not configured on the server.' },
       { status: 503 }
     );
   }
