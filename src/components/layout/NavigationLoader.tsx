@@ -12,6 +12,16 @@ export default function NavigationLoader() {
   }, [pathname]);
 
   useEffect(() => {
+    const clear = () => setLoading(false);
+    window.addEventListener('popstate', clear);
+    window.addEventListener('pageshow', clear);
+    return () => {
+      window.removeEventListener('popstate', clear);
+      window.removeEventListener('pageshow', clear);
+    };
+  }, []);
+
+  useEffect(() => {
     const onDocumentClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 

@@ -16,6 +16,19 @@ export function AdminBusyIndicator() {
   }, [pathname]);
 
   useEffect(() => {
+    if (!navigating) return undefined;
+    const timeout = window.setTimeout(() => setNavigating(false), 15000);
+    const clear = () => setNavigating(false);
+    window.addEventListener('popstate', clear);
+    window.addEventListener('pageshow', clear);
+    return () => {
+      window.clearTimeout(timeout);
+      window.removeEventListener('popstate', clear);
+      window.removeEventListener('pageshow', clear);
+    };
+  }, [navigating]);
+
+  useEffect(() => {
     const onDocumentClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       const target = event.target as HTMLElement | null;
