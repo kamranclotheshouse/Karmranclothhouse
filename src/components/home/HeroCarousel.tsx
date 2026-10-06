@@ -130,7 +130,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center">
         <div className="w-full max-w-7xl mx-auto px-4 py-14 sm:px-8 sm:py-16 md:py-24">
-          <div key={currentIndex} className="max-w-2xl animate-fade-in-up">
+          <div key={currentIndex} className="hero-carousel__copy max-w-2xl animate-fade-in-up">
             {/* Eyebrow */}
             <div className="mb-5 flex items-center gap-2 sm:mb-6 sm:gap-3">
               <div className="h-px w-8 shrink-0 sm:w-12" style={{ backgroundColor: 'var(--color-gold)' }} />
@@ -145,7 +145,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
             {/* Headline */}
             <h1
               style={{ fontFamily: "'Playfair Display', serif" }}
-              className="mb-5 max-w-full break-words text-[2.65rem] leading-[1.02] drop-shadow-lg sm:mb-6 sm:text-6xl md:text-7xl lg:text-8xl"
+              className="hero-carousel__title mb-5 max-w-full break-words text-[2.65rem] leading-[1.02] drop-shadow-lg sm:mb-6 sm:text-6xl md:text-7xl lg:text-8xl"
             >
               <span style={{ color: '#C9A227' }}>{content.titleLine1}</span>
               {content.titleLine2 && (
@@ -157,7 +157,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
             </h1>
 
             {/* Subtitle */}
-            <p className="mb-8 max-w-lg text-xs leading-relaxed font-light drop-shadow sm:mb-10 sm:text-base md:text-lg"
+            <p className="hero-carousel__subtitle mb-8 max-w-lg text-xs leading-relaxed font-light drop-shadow sm:mb-10 sm:text-base md:text-lg"
                style={{ color: 'rgba(255,255,255,0.85)' }}>
               {content.subtitle}
             </p>

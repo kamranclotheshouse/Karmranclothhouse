@@ -150,6 +150,29 @@
   text-transform: uppercase;
 }
 
+/* Reserve the changing copy's vertical space so carousel slides do not jump. */
+.hero-carousel__copy {
+  min-height: 410px;
+}
+
+.hero-carousel__title {
+  min-height: 8.2rem;
+}
+
+.hero-carousel__subtitle {
+  min-height: 4.5rem;
+}
+
+@media (min-width: 640px) {
+  .hero-carousel__copy { min-height: 470px; }
+  .hero-carousel__title { min-height: 11rem; }
+}
+
+@media (min-width: 1024px) {
+  .hero-carousel__copy { min-height: 500px; }
+  .hero-carousel__title { min-height: 14rem; }
+}
+
 .site-loading__spinner {
   width: 2.25rem;
   height: 2.25rem;
