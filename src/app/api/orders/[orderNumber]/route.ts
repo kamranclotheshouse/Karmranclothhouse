@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin, readJson, fail } from '@/lib/admin/api';
-import { getOrderForTracking, updateOrderStatus, OrderNotFoundError } from '@/lib/db/orders';
+import { deleteOrder, getOrderForTracking, updateOrderStatus, OrderNotFoundError } from '@/lib/db/orders';
 import { ORDER_STATUSES, type OrderStatus } from '@/lib/orders';
 
 export const dynamic = 'force-dynamic';
@@ -72,5 +72,21 @@ export async function PATCH(request: Request, { params }: Params) {
     if (error instanceof OrderNotFoundError) return fail('That order no longer exists.', 404);
     console.error('[orders] status update failed:', error);
     return fail('Status could not be saved. Please try again.', 500);
+  }
+}
+
+/** DELETE /api/orders/[orderNumber] — admin removes an order permanently. */
+export async function DELETE(request: Request, { params }: Params) {
+  const denied = requireAdmin(request);
+  if (denied) return denied;
+
+  const { orderNumber } = await params;
+  try {
+    await deleteOrder(orderNumber);
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    if (error instanceof OrderNotFoundError) return fail('That order no longer exists.', 404);
+    console.error('[orders] delete failed:', error);
+    return fail('Order could not be deleted. Please try again.', 500);
   }
 }

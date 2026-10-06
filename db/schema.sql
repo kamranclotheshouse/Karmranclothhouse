@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS orders (
     payment_method     VARCHAR(50)  NOT NULL DEFAULT 'Cash on Delivery (COD)',
 
     order_status       VARCHAR(20)  NOT NULL DEFAULT 'pending'
-        CHECK (order_status IN ('pending','confirmed','dispatched','delivered','cancelled')),
+        CHECK (order_status IN ('pending','confirmed','dispatched','delivered','returned','cancelled')),
 
     -- [{"product_id":"...","title":"...","color":"Navy","quantity":1,"price":4500,"image":"..."}]
     items              JSONB NOT NULL DEFAULT '[]'::jsonb,
@@ -123,6 +123,9 @@ CREATE TABLE IF NOT EXISTS orders (
 -- Additive shipment fields for databases created before courier tracking was added.
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS courier_name VARCHAR(100);
 ALTER TABLE orders ADD COLUMN IF NOT EXISTS tracking_number VARCHAR(100);
+ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_order_status_check;
+ALTER TABLE orders ADD CONSTRAINT orders_order_status_check
+    CHECK (order_status IN ('pending','confirmed','dispatched','delivered','returned','cancelled'));
 
 -- Monotonic order numbers: KCH-1001, KCH-1002, ...
 CREATE SEQUENCE IF NOT EXISTS order_number_seq START 1001;

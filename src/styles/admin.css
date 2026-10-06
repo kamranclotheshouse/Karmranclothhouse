@@ -449,6 +449,7 @@
 .admin-badge[data-status='confirmed']   { background: #DBEAFE; color: #1E40AF; }
 .admin-badge[data-status='dispatched']  { background: var(--adm-green); color: #FFFFFF; }
 .admin-badge[data-status='delivered']   { background: #D1FAE5; color: #065F46; }
+.admin-badge[data-status='returned']    { background: #FDE68A; color: #92400E; }
 .admin-badge[data-status='cancelled']   { background: #FEE2E2; color: #991B1B; }
 
 .admin-status-select {

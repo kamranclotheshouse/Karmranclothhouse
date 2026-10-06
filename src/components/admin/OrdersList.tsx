@@ -11,6 +11,7 @@ const STATUS_MESSAGES: Record<OrderStatus, string> = {
   confirmed: 'Aap ka order confirm ho gaya hai aur packing ke liye ready kiya ja raha hai.',
   dispatched: 'Your order {id} has been dispatched via TCS / Leopards. You will receive it in 2–5 working days.',
   delivered: 'Aap ka order deliver ho gaya hai. Kamran Cloth House se shopping ka shukriya!',
+  returned: 'Aap ka order return process mein hai. Hamari team jald aap se rabta karegi.',
   cancelled: 'Aap ka order cancel kar diya gaya hai. Agar ye ghalti hai to humein WhatsApp par batayein.',
 };
 
@@ -68,6 +69,7 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all');
   const [printing, setPrinting] = useState<Order | null>(null);
   const [saving, setSaving] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase().replace(/^kch-?/, 'kch-');
@@ -128,6 +130,25 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
       window.print();
       setPrinting(null);
     }, 50);
+  };
+
+  const handleDelete = async (order: Order) => {
+    if (!window.confirm(`${order.orderNumber} permanently delete karna hai? Ye action undo nahi hoga.`)) return;
+    setDeleting(order.orderNumber);
+    try {
+      const res = await fetch(`/api/orders/${encodeURIComponent(order.orderNumber)}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        notify(data.error ?? 'Order delete nahi ho saka.', 'error');
+        return;
+      }
+      notify(`${order.orderNumber} delete ho gaya.`, 'success');
+      router.refresh();
+    } catch {
+      notify('Network problem — order delete nahi ho saka.', 'error');
+    } finally {
+      setDeleting(null);
+    }
   };
 
   return (
@@ -314,6 +335,15 @@ export function OrdersList({ orders, settings }: { orders: Order[]; settings: St
                 >
                   Call Customer
                 </a>
+
+                <button
+                  type="button"
+                  className="admin-btn admin-btn--danger admin-btn--sm"
+                  disabled={deleting === order.orderNumber || saving === order.orderNumber}
+                  onClick={() => handleDelete(order)}
+                >
+                  {deleting === order.orderNumber ? 'Deleting…' : 'Delete Order'}
+                </button>
               </div>
             </div>
           ))

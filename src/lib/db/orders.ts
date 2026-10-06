@@ -428,3 +428,11 @@ export async function updateOrderStatus(
   if (rows.length === 0) throw new OrderNotFoundError(orderNumber);
   return toOrder(rows[0]);
 }
+
+export async function deleteOrder(orderNumber: string): Promise<void> {
+  const rows = await query<{ order_number: string }>(
+    'DELETE FROM orders WHERE order_number = $1 RETURNING order_number',
+    [normaliseOrderNumber(orderNumber)]
+  );
+  if (rows.length === 0) throw new OrderNotFoundError(orderNumber);
+}

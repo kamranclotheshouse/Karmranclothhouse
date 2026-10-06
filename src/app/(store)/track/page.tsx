@@ -10,6 +10,7 @@ const STATUS_LABELS: Record<Order['status'], string> = {
   confirmed: 'Confirmed',
   dispatched: 'Dispatched',
   delivered: 'Delivered',
+  returned: 'Returned',
   cancelled: 'Cancelled',
 };
 
@@ -159,7 +160,7 @@ export default function TrackPage() {
               </div>
 
               {/* Status timeline */}
-              {order.status !== 'cancelled' && (
+              {order.status !== 'cancelled' && order.status !== 'returned' && (
                 <div className="px-6 py-8 border-b border-line bg-white">
                   <div className="flex items-center">
                     {STATUS_FLOW.map((status, i) => (

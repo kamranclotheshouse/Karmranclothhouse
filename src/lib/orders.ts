@@ -4,13 +4,14 @@
  * (server) or `POST /api/orders` (browser).
  */
 
-export type OrderStatus = 'pending' | 'confirmed' | 'dispatched' | 'delivered' | 'cancelled';
+export type OrderStatus = 'pending' | 'confirmed' | 'dispatched' | 'delivered' | 'returned' | 'cancelled';
 
 export const ORDER_STATUSES: OrderStatus[] = [
   'pending',
   'confirmed',
   'dispatched',
   'delivered',
+  'returned',
   'cancelled',
 ];
 
