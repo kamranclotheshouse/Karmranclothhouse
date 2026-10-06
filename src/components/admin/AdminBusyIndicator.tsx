@@ -33,6 +33,17 @@ export function AdminBusyIndicator() {
     const originalFetch = window.fetch.bind(window);
 
     const trackedFetch: typeof window.fetch = async (...args) => {
+      const requestInput = args[0];
+      const requestUrl = typeof requestInput === 'string'
+        ? requestInput
+        : requestInput instanceof URL
+          ? requestInput.pathname
+          : requestInput instanceof Request
+            ? requestInput.url
+            : '';
+      const isAdminApiAction = new URL(requestUrl || window.location.href, window.location.href).pathname.startsWith('/api/');
+      if (!isAdminApiAction) return originalFetch(...args);
+
       activeRequests.current += 1;
       if (!showTimer.current) {
         showTimer.current = setTimeout(() => {
