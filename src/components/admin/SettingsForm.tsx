@@ -212,7 +212,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
 
             <AdminField
               label="Landline"
-              hint="Shop ka lajra number. Khali chhod dein to footer me is line ko chhupa diya jayega."
+              hint="Shop ka landline number. Khali chhod dein to footer me is line ko chhupa diya jayega."
               error={errors.landline}
             >
               <AdminInput

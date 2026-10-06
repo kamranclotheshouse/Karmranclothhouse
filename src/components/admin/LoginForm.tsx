@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -42,9 +43,11 @@ export function AdminLoginForm() {
   return (
     <div className="admin-login">
       <form className="admin-login-card" onSubmit={handleSubmit}>
-        <img
+        <Image
           src="/kamran_logo.png"
           alt="Kamran Cloth House"
+          width={76}
+          height={24}
           className="admin-login-logo"
         />
         <h1 className="admin-login-title">Admin Portal</h1>
@@ -78,8 +81,7 @@ export function AdminLoginForm() {
         </button>
 
         <p className="admin-hint">
-          Set <code>ADMIN_PIN</code> in <code>.env.local</code> (default is{' '}
-          <code>1990</code>). This gate protects the dashboard UI — real security comes
+          Set <code>ADMIN_PIN</code> in <code>.env.local</code>. This gate protects the dashboard UI — real security comes
           from keeping the database credentials server-side only.
         </p>
 

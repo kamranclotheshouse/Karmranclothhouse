@@ -30,6 +30,10 @@
 .admin-wrapper {
   display: flex;
   min-height: 100vh;
+  width: 100%;
+  /* `hidden` would create a scroll container and break the sticky sidebar.
+     `clip` prevents sideways overflow without changing sticky positioning. */
+  overflow-x: clip;
   background-color: var(--adm-bg);
   color: var(--adm-ink);
   font-family: 'Outfit', system-ui, sans-serif;
@@ -124,8 +128,10 @@
 .admin-content {
   flex: 1;
   min-width: 0;
+  width: auto;
   padding: 36px 40px 80px;
-  max-width: 1100px;
+  max-width: 1360px;
+  margin: 0 auto;
 }
 
 /* ── Page header ──────────────────────────────────────────── */
@@ -146,6 +152,7 @@
   color: var(--adm-green);
   letter-spacing: 0.01em;
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .admin-subheading {
@@ -236,6 +243,8 @@
   border-bottom: 1px solid var(--adm-border);
   background-color: rgba(14, 59, 44, 0.02);
 }
+
+.admin-panel-header > * { min-width: 0; }
 
 .admin-panel-title {
   margin: 0;
@@ -424,6 +433,14 @@
 }
 .admin-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.admin-btn:focus-visible,
+.admin-link:focus-visible,
+.admin-input:focus-visible,
+.admin-status-select:focus-visible {
+  outline: 3px solid rgba(201, 162, 39, 0.45);
+  outline-offset: 2px;
+}
+
 .admin-btn--ghost {
   background-color: transparent;
   color: var(--adm-green);
@@ -518,7 +535,7 @@
 
 .admin-product-info {
   flex: 1;
-  min-width: 180px;
+  min-width: 0;
 }
 
 .admin-product-name {
@@ -1201,6 +1218,7 @@ textarea.admin-input {
     height: auto;
     width: 100%;
     flex-direction: column;
+    box-shadow: 0 2px 12px rgba(10, 43, 32, 0.18);
   }
 
   .admin-nav-brand {
@@ -1219,6 +1237,7 @@ textarea.admin-input {
   }
 
   .admin-links::-webkit-scrollbar { display: none; }
+  .admin-links { overscroll-behavior-inline: contain; }
 
   .admin-links > li { flex: 0 0 auto; margin-bottom: 0; }
 
@@ -1229,7 +1248,52 @@ textarea.admin-input {
 
   .admin-content {
     padding: 24px 20px 60px;
+    max-width: none;
   }
+}
+
+@media (max-width: 760px) {
+  .admin-content { padding: 22px 14px 48px; }
+  .admin-heading { font-size: 24px; }
+  .admin-page-header { align-items: stretch; margin-bottom: 20px; }
+  .admin-page-header > .admin-btn,
+  .admin-page-header > a.admin-btn { width: 100%; }
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .admin-stat { padding: 16px; }
+  .admin-stat-label { font-size: 9px; letter-spacing: 0.14em; }
+  .admin-panel { margin-bottom: 16px; border-radius: 6px; }
+  .admin-panel-header,
+  .admin-panel-body { padding: 16px; }
+  .admin-section-desc { padding: 0 16px 14px; }
+  .admin-panel-header { align-items: flex-start; }
+  .admin-panel-header > .admin-btn,
+  .admin-panel-header > a.admin-btn { width: 100%; }
+  .admin-actions {
+    position: sticky;
+    bottom: 10px;
+    z-index: 10;
+    margin: 0 -2px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius);
+    box-shadow: 0 8px 24px rgba(10, 43, 32, 0.14);
+  }
+  .admin-actions .admin-btn { flex: 1 1 140px; }
+  .admin-form-topbar { align-items: stretch; }
+  .admin-form-topbar > * { min-width: 0; }
+  .admin-form-topbar .admin-btn,
+  .admin-form-topbar a.admin-btn { width: 100%; }
+  .admin-product { padding: 14px 16px; gap: 12px; }
+  .admin-product-info { min-width: 0; }
+  .admin-product-price { flex: 0 0 auto; }
+  .admin-taxonomy-row { padding: 14px 16px; }
+  .admin-taxonomy-actions { width: 100%; margin-left: 0; }
+  .admin-taxonomy-actions .admin-btn { flex: 1 1 0; }
 }
 
 @media (max-width: 640px) {
@@ -1239,6 +1303,12 @@ textarea.admin-input {
 
   .admin-stat-value { font-size: 28px; }
 
+  .admin-nav-brand { padding: 14px 16px; }
+  .admin-title { font-size: 15px; }
+  .admin-links { padding: 7px 8px; }
+  .admin-link { min-height: 38px; padding: 8px 11px; gap: 7px; }
+  .admin-link svg { flex: 0 0 auto; }
+
   .admin-list-toolbar,
   .admin-list-actions {
     flex-direction: column;
@@ -1246,6 +1316,10 @@ textarea.admin-input {
   }
 
   .admin-list-search { max-width: none; }
+
+  .admin-list-filters,
+  .admin-list-filters .admin-btn { width: 100%; }
+  .admin-list-filters .admin-btn { justify-content: flex-start; }
 
   .admin-preview {
     flex-direction: column;
@@ -1800,5 +1874,3 @@ textarea.admin-input {
   flex-shrink: 0;
   line-height: 1.35;
 }
-
-

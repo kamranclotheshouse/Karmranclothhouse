@@ -82,9 +82,8 @@ export function TaxonomyManager({ kind, rows }: Props) {
       isFeatured: row.isFeatured,
       sortOrder: row.sortOrder,
     });
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    // Keep the current scroll position so editing a row does not unexpectedly
+    // jump the admin back to the top of the page.
   };
 
   const reset = () => {

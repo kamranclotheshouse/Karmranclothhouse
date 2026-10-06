@@ -110,6 +110,7 @@ export function ProductList({ products }: { products: AdminProduct[] }) {
               type="button"
               className="admin-btn admin-btn--ghost admin-btn--sm"
               style={filter === key ? { backgroundColor: '#030302', color: '#ffffff' } : undefined}
+              aria-pressed={filter === key}
               onClick={() => setFilter(key)}
             >
               {label}
@@ -144,7 +145,7 @@ export function ProductList({ products }: { products: AdminProduct[] }) {
             disabled={busy !== null}
             onClick={() => setAllStock(true)}
           >
-            Mark all in stock
+            Mark all as in stock
           </button>
           <button
             type="button"
@@ -152,7 +153,7 @@ export function ProductList({ products }: { products: AdminProduct[] }) {
             disabled={busy !== null}
             onClick={() => setAllStock(false)}
           >
-            Mark all out
+            Mark all as out of stock
           </button>
         </span>
       </div>

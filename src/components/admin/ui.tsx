@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { cloneElement, isValidElement, useEffect, useState, type ReactElement } from 'react';
 
 /* ────────────────────────────────────────────────────────────────────────────
    Admin UI primitives.
@@ -123,9 +123,25 @@ type FieldProps = {
  * it stays readable once the field has a value.
  */
 export function AdminField({ label, hint, error, required, children, note }: FieldProps) {
+  const fieldId = `admin-field-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+  const describedBy = error ? `${fieldId}-error` : hint ? `${fieldId}-hint` : undefined;
+  const childElement = isValidElement(children)
+    ? (children as ReactElement<Record<string, unknown>>)
+    : null;
+  const control = childElement
+    ? cloneElement(childElement, {
+        id: childElement.props.id ?? fieldId,
+        'aria-describedby': describedBy,
+        'aria-invalid': error ? true : undefined,
+      })
+    : children;
+  const controlId = childElement && typeof childElement.props.id === 'string'
+    ? childElement.props.id
+    : fieldId;
+
   return (
     <div className="admin-field">
-      <label className="admin-label">
+      <label className="admin-label" htmlFor={childElement ? controlId : undefined}>
         {label}
         {required && (
           <span style={{ color: '#B42318', marginLeft: 4 }} aria-label="required">
@@ -133,10 +149,10 @@ export function AdminField({ label, hint, error, required, children, note }: Fie
           </span>
         )}
       </label>
-      {children}
-      {hint && !error && <p className="admin-hint">{hint}</p>}
+      {control}
+      {hint && !error && <p id={`${fieldId}-hint`} className="admin-hint">{hint}</p>}
       {error && (
-        <p className="admin-hint" style={{ color: '#B42318', marginTop: 6 }}>
+        <p id={`${fieldId}-error`} className="admin-hint" style={{ color: '#B42318', marginTop: 6 }} role="alert">
           {error}
         </p>
       )}

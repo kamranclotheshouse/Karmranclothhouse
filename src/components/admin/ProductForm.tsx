@@ -127,7 +127,7 @@ export function ProductForm({
     const found = validateProduct(values);
     if (hasErrors(found)) {
       setErrors(found);
-      setSaveError('Kuch fields theek nahi. Lohhe ke neeche laal message dekhein.');
+      setSaveError('Kuch fields theek nahi. Neeche laal messages dekhein.');
       document.querySelector<HTMLElement>('.admin-error')?.scrollIntoView({ block: 'center' });
       return;
     }
