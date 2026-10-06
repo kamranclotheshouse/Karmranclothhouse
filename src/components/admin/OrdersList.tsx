@@ -22,7 +22,11 @@ function formatMoney(n: number): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleString('en-PK', { dateStyle: 'medium', timeStyle: 'short' });
+  return new Date(iso).toLocaleString('en-PK', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Karachi',
+  });
 }
 
 function whatsappUpdateUrl(order: Order, status: OrderStatus, settings: StoreSettings): string {
