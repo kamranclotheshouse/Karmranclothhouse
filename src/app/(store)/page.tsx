@@ -5,7 +5,8 @@ import TrustStrip from '@/components/home/TrustStrip';
 import WinterBanner from '@/components/home/WinterBanner';
 import BrandsCarousel from '@/components/home/BrandsCarousel';
 import BestSellers from '@/components/home/BestSellers';
-import { getCategories, getBrands, getBestsellerProducts, getFeaturedProducts } from '@/lib/db/storefront';
+import { getAllProducts, getCategories, getBrands, getBestsellerProducts, getFeaturedProducts } from '@/lib/db/storefront';
+import AllProductsPreview from '@/components/home/AllProductsPreview';
 import { getHeroContent, getPromoBanner } from '@/lib/db/banners';
 
 export const revalidate = 60;
@@ -15,13 +16,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [categories, hero, promo, brands, bestsellers, featured] = await Promise.all([
+  const [categories, hero, promo, brands, bestsellers, featured, allProducts] = await Promise.all([
     getCategories(),
     getHeroContent(),
     getPromoBanner(),
     getBrands(),
     getBestsellerProducts(),
     getFeaturedProducts(),
+    getAllProducts(),
   ]);
 
   // All active categories for the grid (up to 8 — matching reference image)
@@ -46,6 +48,9 @@ export default async function Home() {
 
       {/* ── 5. BEST SELLING FABRICS + TAILORING CTA ────────────── */}
       <BestSellers products={bestsellingProducts} />
+
+      {/* Complete catalogue preview — capped so the home page stays quick and balanced. */}
+      <AllProductsPreview products={allProducts} />
 
       {/* ── 6. TRUST STRIP (3-col dark bar) ────────────────────── */}
       <TrustStrip />
