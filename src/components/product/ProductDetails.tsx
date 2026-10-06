@@ -39,7 +39,7 @@ export default function ProductDetails({
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0;
 
-  const whatsappMsg = encodeURIComponent(
+  const legacyWhatsappMsg = encodeURIComponent(
     `السلام علیکم، مجھے یہ fabric order کرنی ہے:\n\n` +
       `Product: ${product.name}\n` +
       `Brand: ${product.brand}\n` +
@@ -49,12 +49,30 @@ export default function ProductDetails({
       `Please confirm availability & delivery details.`
   );
 
-  const outOfStockMsg = encodeURIComponent(
+  const legacyOutOfStockMsg = encodeURIComponent(
     `السلام علیکم، مجھے یہ fabric چاہیے:\n\n` +
       `Product: ${product.name}\n` +
       `Brand: ${product.brand}\n\n` +
       `Yeh website par OUT OF STOCK دکھا رہا ہے۔ کیا یہ دوبارہ available ہو گا؟`
   );
+
+  const whatsappMsg = encodeURIComponent(
+    `Assalam-o-Alaikum, mujhe ye fabric order karni hai:\n\n` +
+      `Product: ${product.name}\n` +
+      `Brand: ${product.brand}\n` +
+      (selectedColor ? `Color: ${selectedColor.name}\n` : '') +
+      `Quantity: ${quantity} piece(s)\n` +
+      `Price: Rs. ${(product.price * quantity).toLocaleString()}\n\n` +
+      `Please availability aur delivery details confirm kar dein.`
+  );
+  const outOfStockMsg = encodeURIComponent(
+    `Assalam-o-Alaikum, mujhe is fabric ki availability confirm karwani hai:\n\n` +
+      `Product: ${product.name}\n` +
+      `Brand: ${product.brand}\n\n` +
+      `Website par out of stock show ho raha hai. Kya ye dobara available hai?`
+  );
+  void legacyWhatsappMsg;
+  void legacyOutOfStockMsg;
 
   const buyNowItem = {
     slug: product.slug,

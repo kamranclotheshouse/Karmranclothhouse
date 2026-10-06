@@ -214,7 +214,7 @@ export default function CheckoutDrawer({
     )
     .join('\n');
 
-  const whatsappConfirmMsg = encodeURIComponent(
+  const legacyWhatsappConfirmMsg = encodeURIComponent(
     `السلام علیکم ${settings.storeName}،\n\n` +
       `میرا COD Order Confirm ہو گیا:\n\n` +
     `Order ID: ${orderId}\n` +
@@ -226,6 +226,20 @@ export default function CheckoutDrawer({
       `Phone: ${placedOrder?.customerPhone ?? form.phone}\n` +
       `Address: ${placedOrder?.deliveryAddress ?? form.address}, ${placedOrder?.city ?? form.city}`
   );
+
+  const whatsappConfirmMsg = encodeURIComponent(
+    `Assalam-o-Alaikum ${settings.storeName},\n\n` +
+      `Mera COD order confirm ho gaya hai.\n\n` +
+      `Order ID: ${orderId}\n` +
+      `Items:\n${orderLines}\n` +
+      `Total: Rs. ${confirmedTotal.toLocaleString()}${
+        confirmedDeliveryFee === 0 ? ' (Free Delivery)' : ` (delivery Rs. ${confirmedDeliveryFee} included)`
+      }\n\n` +
+      `Name: ${placedOrder?.customerName ?? form.name}\n` +
+      `Phone: ${placedOrder?.customerPhone ?? form.phone}\n` +
+      `Address: ${placedOrder?.deliveryAddress ?? form.address}, ${placedOrder?.city ?? form.city}`
+  );
+  void legacyWhatsappConfirmMsg;
 
   return (
     <>
