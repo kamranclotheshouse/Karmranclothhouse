@@ -74,6 +74,13 @@ const num = (value: string | number | null | undefined): number =>
 const str = (value: string | null | undefined): string | undefined =>
   value === null || value === undefined || value === '' ? undefined : value;
 
+/** Keep direct Cloudinary images small enough for mobile connections. */
+function optimizeProductImage(url: string): string {
+  if (!url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) return url;
+  if (url.includes('/w_') || url.includes('/c_limit/')) return url;
+  return url.replace('/image/upload/', '/image/upload/w_1200,c_limit/');
+}
+
 function toAdminProduct(row: ProductRow): AdminProduct {
   return {
     id: row.id,
@@ -93,7 +100,7 @@ function toAdminProduct(row: ProductRow): AdminProduct {
     weaveType: row.weave_type ?? '',
     description: row.description ?? '',
     colors: Array.isArray(row.color_variants) ? row.color_variants : [],
-    images: Array.isArray(row.images) ? row.images : [],
+    images: Array.isArray(row.images) ? row.images.map(optimizeProductImage) : [],
     isFeatured: row.is_featured,
     isBestseller: row.is_bestseller,
     sku: row.sku ?? undefined,
