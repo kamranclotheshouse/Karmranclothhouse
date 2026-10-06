@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${name} Fabric Collection | Kamran Cloth House — Saddar, Peshawar`,
     description: `Browse 100% original ${name} unstitched fabric collection at Kamran Cloth House, Saddar Peshawar. Cash on Delivery across Pakistan.`,
+    alternates: { canonical: `/brands/${slug}` },
   };
 }
 

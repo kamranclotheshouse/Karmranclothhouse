@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: 'All Brands | Kamran Cloth House — Shafi Market, Saddar Peshawar',
   description:
     'Explore 30+ premium fabric brands at Kamran Cloth House, Saddar Peshawar. Grace, Pasha, Gul Ahmed, Din Fabrics and more — Cash on Delivery across Pakistan.',
+  alternates: { canonical: '/brands' },
 };
 
 export default async function BrandsPage() {

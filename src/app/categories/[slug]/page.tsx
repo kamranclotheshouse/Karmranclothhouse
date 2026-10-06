@@ -23,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${name} | Kamran Cloth House — Saddar, Peshawar`,
     description: cat?.description ?? `Browse ${name} at Kamran Cloth House, Saddar Peshawar. Cash on Delivery nationwide.`,
+    alternates: { canonical: `/categories/${slug}` },
   };
 }
 

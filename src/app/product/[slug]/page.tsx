@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${product.name} — ${product.brand} | Kamran Cloth House`,
     description: `${product.description.slice(0, 155)} Cash on Delivery across Pakistan from Kamran Cloth House, Saddar Peshawar.`,
+    alternates: { canonical: `/product/${product.slug}` },
     openGraph: {
       title: `${product.name} | Kamran Cloth House`,
       description: product.description.slice(0, 155),
@@ -58,5 +59,37 @@ export default async function ProductPage({ params }: Props) {
   );
   const related = [...sameCategory, ...fill].slice(0, 4);
 
-  return <ProductDetails product={product} settings={settings} related={related} />;
+  // schema.org Product — price and availability for Google rich results.
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images,
+    description: product.description,
+    sku: product.sku ?? product.slug,
+    brand: { '@type': 'Brand', name: product.brand },
+    offers: {
+      '@type': 'Offer',
+      url: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamrancloth.pk'}/product/${product.slug}`,
+      priceCurrency: 'PKR',
+      price: product.price,
+      availability:
+        product.isInStock === false
+          ? 'https://schema.org/OutOfStock'
+          : 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
+      <ProductDetails product={product} settings={settings} related={related} />
+    </>
+  );
 }

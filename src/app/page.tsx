@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import HeroCarousel from '@/components/home/HeroCarousel';
 import CategoriesGrid from '@/components/home/CategoriesGrid';
 import TrustStrip from '@/components/home/TrustStrip';
@@ -8,6 +9,10 @@ import { getCategories, getBrands, getBestsellerProducts, getFeaturedProducts } 
 import { getHeroContent, getPromoBanner } from '@/lib/db/banners';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default async function Home() {
   const [categories, hero, promo, brands, bestsellers, featured] = await Promise.all([

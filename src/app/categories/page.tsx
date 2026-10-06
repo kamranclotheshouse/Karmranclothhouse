@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: 'All Categories | Kamran Cloth House — Premium Men\'s Fabric',
   description:
     'Browse all fabric categories — Kapra, Cotton, Dulha Design, Winter Fabric, Summer Fabric, Coats, Waistcoats, and Shawls at Kamran Cloth House, Saddar Peshawar.',
+  alternates: { canonical: '/categories' },
 };
 
 export default async function CategoriesPage() {

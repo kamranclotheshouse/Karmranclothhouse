@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import type { Metadata } from 'next';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { AdminLoginForm } from '@/components/admin/LoginForm';
 import { AdminToast } from '@/components/admin/ui';
@@ -15,6 +16,12 @@ import '@/styles/admin.css';
  * flushed by the time the page runs.
  */
 export const dynamic = 'force-dynamic';
+
+/** Never let the admin panel into search results. */
+export const metadata: Metadata = {
+  title: 'Admin | Kamran Cloth House',
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies();
