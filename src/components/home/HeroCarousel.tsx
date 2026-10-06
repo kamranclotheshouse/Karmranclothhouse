@@ -79,7 +79,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
 
   return (
     <section
-      className="relative flex min-h-[78svh] flex-col overflow-hidden bg-brand text-white md:min-h-[88svh]"
+      className="relative flex min-h-[78svh] flex-col overflow-hidden bg-brand text-white md:min-h-[calc(100svh-7rem)]"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -129,7 +129,7 @@ export default function HeroCarousel({ hero }: HeroCarouselProps) {
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center">
-        <div className="w-full max-w-7xl mx-auto px-4 py-14 sm:px-8 sm:py-16 md:py-24">
+        <div className="w-full max-w-7xl mx-auto px-4 py-14 sm:px-8 sm:py-16 md:py-10 lg:py-14">
           <div key={currentIndex} className="hero-carousel__copy max-w-2xl animate-fade-in-up">
             {/* Eyebrow */}
             <div className="mb-5 flex items-center gap-2 sm:mb-6 sm:gap-3">

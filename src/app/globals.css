@@ -164,13 +164,13 @@
 }
 
 @media (min-width: 640px) {
-  .hero-carousel__copy { min-height: 470px; }
-  .hero-carousel__title { min-height: 11rem; }
+  .hero-carousel__copy { min-height: 410px; }
+  .hero-carousel__title { min-height: 10rem; }
 }
 
 @media (min-width: 1024px) {
-  .hero-carousel__copy { min-height: 500px; }
-  .hero-carousel__title { min-height: 14rem; }
+  .hero-carousel__copy { min-height: 430px; }
+  .hero-carousel__title { min-height: 11.5rem; }
 }
 
 .site-loading__spinner {
