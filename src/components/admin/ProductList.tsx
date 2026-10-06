@@ -56,6 +56,30 @@ export function ProductList({ products }: { products: AdminProduct[] }) {
     }
   }
 
+  async function removeProduct(product: AdminProduct) {
+    if (product.isInStock) return;
+    if (!window.confirm(`"${product.name}" permanently remove karna hai? Ye action undo nahi hoga.`)) {
+      return;
+    }
+
+    setBusy(product.id);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/products/${product.id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({ ok: false }));
+        setError(body.error || 'Product remove nahi ho paya. Dobara try karein.');
+        return;
+      }
+      notify('Out-of-stock product remove ho gaya');
+      router.refresh();
+    } catch {
+      setError('Server se connection nahi ho paya.');
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function setAllStock(next: boolean) {
     const targets = products.filter((p) => p.isInStock !== next);
     if (targets.length === 0) return;
@@ -223,6 +247,16 @@ export function ProductList({ products }: { products: AdminProduct[] }) {
                   >
                     Edit
                   </button>
+                  {!product.isInStock && (
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn--danger admin-btn--sm"
+                      disabled={isBusy}
+                      onClick={() => removeProduct(product)}
+                    >
+                      Remove
+                    </button>
+                  )}
                 </span>
               </div>
             );
