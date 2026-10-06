@@ -3,7 +3,6 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import WhatsAppButton from '@/components/layout/WhatsAppButton';
 import PixelLoader from '@/components/analytics/PixelLoader';
-import NavigationLoader from '@/components/layout/NavigationLoader';
 import { CartProvider } from '@/components/cart/CartProvider';
 import { getStoreSettings } from '@/lib/db/settings';
 
@@ -63,8 +62,6 @@ export default async function StoreLayout({
       <TopBar settings={settings} />
 
       <Header settings={settings} />
-
-      <NavigationLoader />
 
       <main className="flex-1">{children}</main>
 

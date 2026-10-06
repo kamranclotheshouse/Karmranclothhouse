@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
+import NavigationLoader from '@/components/layout/NavigationLoader';
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -53,7 +54,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`h-full ${playfair.variable} ${outfit.variable}`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <NavigationLoader />
+        {children}
+      </body>
     </html>
   );
 }

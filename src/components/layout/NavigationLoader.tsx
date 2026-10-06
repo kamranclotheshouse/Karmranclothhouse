@@ -21,6 +21,7 @@ export default function NavigationLoader() {
 
       const url = new URL(link.href, window.location.href);
       if (url.origin !== window.location.origin || url.pathname === window.location.pathname && url.search === window.location.search) return;
+      if (url.pathname.startsWith('/admin')) return;
 
       setLoading(true);
     };
