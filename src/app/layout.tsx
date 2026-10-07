@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_PK',
     siteName: 'Kamran Cloth House',
+    url: '/',
     title: "Kamran Cloth House | Premium Men's Fabric — Saddar, Peshawar",
     description:
       "Explore the finest unstitched fabric, dulha designs & branded collections at Kamran Cloth House, Shafi Market, Saddar, Peshawar. Cash on Delivery across Pakistan.",

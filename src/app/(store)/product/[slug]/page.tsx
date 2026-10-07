@@ -30,9 +30,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: `${product.description.slice(0, 155)} Cash on Delivery across Pakistan from Kamran Cloth House, Saddar Peshawar.`,
     alternates: { canonical: `/product/${product.slug}` },
     openGraph: {
+      type: 'website',
+      siteName: 'Kamran Cloth House',
+      url: `/product/${product.slug}`,
       title: `${product.name} | Kamran Cloth House`,
       description: product.description.slice(0, 155),
-      images: [{ url: product.images[0] }],
+      images: [{
+        url: product.images[0],
+        width: 1200,
+        height: 1600,
+        alt: `${product.name} - ${product.brand} fabric`,
+      }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} | Kamran Cloth House`,
+      description: product.description.slice(0, 155),
+      images: [product.images[0]],
     },
   };
 }
