@@ -80,11 +80,6 @@ export function AdminLoginForm() {
           {submitting ? 'Verifying…' : 'Sign In'}
         </button>
 
-        <p className="admin-hint">
-          Set <code>ADMIN_PIN</code> in <code>.env.local</code>. This gate protects the dashboard UI — real security comes
-          from keeping the database credentials server-side only.
-        </p>
-
         <Link href="/" className="admin-login-back">
           ← Back to store
         </Link>
