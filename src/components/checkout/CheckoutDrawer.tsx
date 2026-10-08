@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { PAKISTAN_CITIES, type NewOrderInput, type Order } from '@/lib/orders';
 import { cartSubtotal, type CartItem } from '@/lib/cart';
 import { getDeliveryFee, type StoreSettings } from '@/lib/settings';
-import { trackAddToCart, trackPurchase } from '@/lib/analytics';
+import { trackInitiateCheckout, trackPurchase } from '@/lib/analytics';
 
 interface CheckoutDrawerProps {
   isOpen: boolean;
@@ -67,7 +67,7 @@ export default function CheckoutDrawer({
       setPlacedOrder(null);
       setErrors({});
       setSubmitError('');
-      trackAddToCart(
+      trackInitiateCheckout(
         items.map((i) => ({ slug: i.slug, name: i.name, price: i.price, quantity: i.quantity }))
       );
     }

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import CheckoutDrawer from '@/components/checkout/CheckoutDrawer';
 import ProductCard from '@/components/product/ProductCard';
 import { useCart } from '@/components/cart/CartProvider';
-import { trackViewContent } from '@/lib/analytics';
+import { trackAddToCart, trackViewContent } from '@/lib/analytics';
 import type { ColorVariant, Product } from '@/lib/data';
 import type { StoreSettings } from '@/lib/settings';
 
@@ -87,6 +87,7 @@ export default function ProductDetails({
 
   const handleAddToCart = () => {
     add(buyNowItem);
+    trackAddToCart([{ slug: buyNowItem.slug, name: buyNowItem.name, price: buyNowItem.price, quantity }]);
     setAddedToCart(true);
     window.setTimeout(() => setAddedToCart(false), 2200);
   };

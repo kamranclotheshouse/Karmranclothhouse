@@ -6,7 +6,8 @@
  * Event map (per ROADMAP R7):
  *   PageView    — every route (initial load + client navigation)
  *   ViewContent — PDP mount
- *   AddToCart   — checkout drawer opens
+ *   AddToCart   — customer adds an item to the basket
+ *   InitiateCheckout — checkout drawer opens
  *   Purchase    — order accepted by /api/orders
  */
 
@@ -75,7 +76,7 @@ export function trackViewContent(product: {
   });
 }
 
-/** Checkout drawer opened. */
+/** Customer added one or more items to the basket. */
 export function trackAddToCart(
   items: { slug: string; name: string; price: number; quantity: number }[]
 ): void {
@@ -94,6 +95,34 @@ export function trackAddToCart(
     content_type: 'product',
     quantity: items.reduce((sum, i) => sum + i.quantity, 0),
     price: value,
+    currency: PKR,
+  });
+}
+
+/** Checkout drawer opened with at least one item. */
+export function trackInitiateCheckout(
+  items: { slug: string; name: string; price: number; quantity: number }[]
+): void {
+  if (items.length === 0) return;
+  const value = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const contentIds = items.map((i) => i.slug);
+  meta('InitiateCheckout', {
+    content_ids: contentIds,
+    content_name: items[0].name,
+    content_type: 'product',
+    value,
+    currency: PKR,
+    num_items: items.reduce((sum, i) => sum + i.quantity, 0),
+  });
+  tiktok('InitiateCheckout', {
+    contents: items.map((i) => ({
+      content_id: i.slug,
+      content_name: i.name,
+      content_type: 'product',
+      quantity: i.quantity,
+      price: i.price,
+    })),
+    value,
     currency: PKR,
   });
 }
