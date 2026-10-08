@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     apple: [{ url: '/images/favicon.png', type: 'image/png' }],
   },
   verification: {
-    google: '37NQHd58yKt-wUf5ysvr1L6Ke0KsOEjStIA8xO1U1PQ',
+    google: 'Hyq6mxg2ZRh-FdglIqtnJecO3x1DbS19tFQ1TDub2eE',
   },
   title: "Kamran Cloth House | Premium Men's Fabric — Saddar, Peshawar",
   description:
