@@ -84,7 +84,7 @@ export default async function ProductPage({ params }: Props) {
     brand: { '@type': 'Brand', name: product.brand },
     offers: {
       '@type': 'Offer',
-      url: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.vercel.app'}/product/${product.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.pk'}/product/${product.slug}`,
       priceCurrency: 'PKR',
       price: product.price,
       availability:

@@ -3,7 +3,7 @@ import { Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
 import NavigationLoader from '@/components/layout/NavigationLoader';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.pk';
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",

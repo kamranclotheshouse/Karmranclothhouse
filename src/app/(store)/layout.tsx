@@ -8,7 +8,7 @@ import { getStoreSettings } from '@/lib/db/settings';
 
 /** schema.org ClothingStore — gives Google the shop's identity, address and socials. */
 function storeJsonLd(settings: Awaited<ReturnType<typeof getStoreSettings>>) {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.vercel.app';
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.pk';
   const sameAs = [
     settings.facebookUrl,
     settings.instagramUrl,
