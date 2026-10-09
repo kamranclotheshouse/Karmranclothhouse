@@ -19,6 +19,15 @@ Transfer ownership and billing to the client’s own email address. Do not send 
 - Meta Business / Events Manager: transfer Pixel and Business access. The active website Pixel is configured in Admin → Settings.
 - TikTok Ads Manager: transfer the Pixel and Business access if TikTok tracking is used.
 
+### Current access status
+
+- Google and PKNIC credentials: shared separately through the password manager.
+- Admin panel login: already handed over; client should change the PIN after acceptance.
+- Meta Business and TikTok Ads Manager: client already owns these accounts; no credentials are required from the developer.
+- Neon and Cloudinary: already connected to the client’s email; client can manage them directly.
+- Vercel: client can inspect the production environment variables after logging in.
+- GitHub: transfer repository ownership or add the client as an administrator.
+
 ## Vercel production variables
 
 Set these in Vercel → Project Settings → Environment Variables → Production:
