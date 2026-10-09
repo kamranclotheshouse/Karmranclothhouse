@@ -10,7 +10,7 @@ const PACKAGES = [
   {
     title: 'Classic Kurta Shalwar',
     tag: 'Everyday & Formal',
-    price: 'Rs. 2,200',
+    price: 'Price on inquiry',
     description: 'Perfect for regular wash’n wear, soft cottons, and daily Karandi.',
     features: [
       'Single/Double needle stitching',
@@ -22,7 +22,7 @@ const PACKAGES = [
   {
     title: 'Executive Suit Stitching',
     tag: 'Signature Fit',
-    price: 'Rs. 2,800',
+    price: 'Price on inquiry',
     description: 'Ideal for Giza Egyptian cottons, festive events, and office wear.',
     features: [
       'Choice of Sherwani collar, English collar, or round band',
@@ -35,7 +35,7 @@ const PACKAGES = [
   {
     title: 'Bespoke Waistcoat',
     tag: 'Traditional Elegance',
-    price: 'Rs. 3,500',
+    price: 'Price on inquiry',
     description: 'Hand-crafted over Jamawar, Banarasi, tropical suiting, or velvet.',
     features: [
       'Full canvas chest piece for structural drape',
@@ -47,7 +47,7 @@ const PACKAGES = [
   {
     title: 'Royal Groom / Prince Coat',
     tag: 'Bridal & Formal',
-    price: 'Rs. 7,500',
+    price: 'Price on inquiry',
     description: 'Tailored specifically for grooms, valima functions, and royal occasions.',
     features: [
       'Full bespoke pattern draft tailored to your silhouette',
@@ -180,10 +180,10 @@ export default function TailoringPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
             <p className="text-[10px] tracking-[0.4em] uppercase mb-3 font-semibold" style={{ color: '#7A5F0E' }}>
-              Transparent Rates
+              Custom Quotes
             </p>
             <h2 style={{ fontFamily: "'Playfair Display', serif" }} className="text-3xl md:text-4xl text-ink">
-              Stitching Packages &amp; Pricing
+              Stitching Packages &amp; Quotes
             </h2>
             <p className="text-xs text-zinc-600 mt-2">Fabric can be purchased from our store or brought by customer</p>
           </div>
@@ -215,10 +215,9 @@ export default function TailoringPage() {
                     {pkg.title}
                   </h3>
                   <div className="flex items-baseline gap-1 mb-4">
-                    <span className="text-2xl font-bold" style={{ color: '#0E3B2C', fontFamily: "'Playfair Display', serif" }}>
+                    <span className="text-lg font-bold" style={{ color: '#0E3B2C', fontFamily: "'Playfair Display', serif" }}>
                       {pkg.price}
                     </span>
-                    <span className="text-[11px] text-zinc-500">/ suit</span>
                   </div>
                   <p className="text-xs text-zinc-600 mb-6 leading-relaxed">
                     {pkg.description}
