@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { getStoreSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Master Tailoring Service | Kamran Cloth House — Saddar, Peshawar',
@@ -81,8 +82,9 @@ const PROCESS_STEPS = [
   },
 ];
 
-export default function TailoringPage() {
-  const whatsappUrl = `https://wa.me/923000000000?text=${encodeURIComponent(
+export default async function TailoringPage() {
+  const settings = await getStoreSettings();
+  const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(
     'السلام علیکم، میں کامران کلوتھ ہاؤس سے ماسٹر ٹیلرنگ سروس کے بارے میں معلومات اور بکنگ چاہتا ہوں۔'
   )}`;
 
