@@ -20,6 +20,7 @@ export default function ProductDetails({
   related?: Product[];
 }) {
   const inStock = product.isInStock ?? true;
+  const isPerMeter = product.categorySlug === 'coat-waistcoat';
   const { add } = useCart();
 
   const availableColors = product.colors.filter((c) => c.inStock);
@@ -223,7 +224,9 @@ export default function ProductDetails({
               {/* Price */}
               <div className="flex items-center gap-4 mb-8">
                 <span className="text-2xl font-medium text-ink">
-                  {product.priceOnInquiry ? 'Price on inquiry' : `Rs. ${product.price.toLocaleString()}`}
+                  {product.priceOnInquiry
+                    ? 'Price on inquiry'
+                    : `Rs. ${product.price.toLocaleString()}${isPerMeter ? ' / meter' : ''}`}
                 </span>
                 {!product.priceOnInquiry && product.compareAtPrice && (
                   <span className="text-base line-through" style={{ color: 'var(--color-fg-muted)' }}>

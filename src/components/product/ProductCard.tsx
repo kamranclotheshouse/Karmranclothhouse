@@ -12,6 +12,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, showBrand = true, showColor = false }: ProductCardProps) {
   const image = product.images?.[0] ?? '/images/kapra.jpg';
+  const isPerMeter = product.categorySlug === 'coat-waistcoat';
 
   return (
     <div
@@ -92,7 +93,9 @@ export default function ProductCard({ product, showBrand = true, showColor = fal
 
         <div className="flex items-baseline gap-2 mb-3 mt-auto">
           <span className="text-sm font-bold" style={{ color: '#10231C' }}>
-            {product.priceOnInquiry ? 'Price on inquiry' : `Rs. ${product.price.toLocaleString()}`}
+            {product.priceOnInquiry
+              ? 'Price on inquiry'
+              : `Rs. ${product.price.toLocaleString()}${isPerMeter ? ' / meter' : ''}`}
           </span>
           {!product.priceOnInquiry && product.compareAtPrice && (
             <span className="text-xs line-through" style={{ color: 'rgba(16, 35, 28, 0.45)' }}>
