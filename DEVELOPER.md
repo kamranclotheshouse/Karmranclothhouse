@@ -1,118 +1,100 @@
-# Developer Guide
+# Kamran Cloth House — Project Guide
 
-Technical reference for working on the Kamran Cloth House storefront and admin panel.
+This document explains the production website, its admin panel, and the small amount of maintenance needed after handover.
 
-## 1. Overview
+## Production
 
-A production e-commerce site for a fabric retailer in Peshawar:
+- Storefront: https://www.kamranclothhouse.pk
+- Admin panel: https://www.kamranclothhouse.pk/admin
+- Primary domain: `www.kamranclothhouse.pk` (the non-www domain redirects to it)
+- Repository: `https://github.com/kamranclotheshouse/Karmranclothhouse`
+- Hosting: Vercel
+- Database: Neon PostgreSQL
+- Media: Cloudinary
 
-- **Storefront** — browse, search, cart, Cash-on-Delivery checkout, WhatsApp ordering, order-status lookup.
-- **Admin panel** (`/admin`) — full content management (catalogue, banners, settings) and order fulfilment.
-- **Stack** — Next.js 16 (App Router), React 19, TypeScript (strict), Tailwind CSS 4, PostgreSQL (Neon), Cloudinary.
+## What is included
 
-## 2. Architecture
+- Mobile-first storefront with six categories and 57 products.
+- Product search, category/brand browsing, product pages and colour variants.
+- Cart and Cash on Delivery checkout.
+- WhatsApp ordering and order-status lookup at `/track`.
+- Admin content management at `/admin` for products, brands, categories, homepage banners, settings and orders.
+- Cloudinary image upload with WebP conversion.
+- Meta and TikTok browser pixels configured from Admin → Settings.
 
-```
-Browser
-  └─ src/app/**            Pages (RSC) + route handlers (src/app/api/**)
-       └─ src/lib/db/**    Data access — the only layer that writes SQL
-            └─ driver      Neon serverless driver; local PGlite fallback
-```
+## Local development
 
-- Server components read through `src/lib/db/*` on every request (`force-dynamic`) or with ISR (`revalidate = 60` on the home page).
-- Validation lives beside its domain: `src/lib/admin/validate-*.ts`, `validateOrderInput` in `src/lib/db/orders.ts`.
-- Client components handle interactivity only (cart, checkout, admin editors); they call the API routes, never the database.
-
-## 3. Local Development
+Requirements: Node.js 20 or newer.
 
 ```bash
 npm install
-cp .env.example .env.local    # fill in values
+copy .env.example .env.local
+npm run dev
+```
+
+For a fresh local database, leave `NEON_DATABASE_URL` empty and run:
+
+```bash
 npm run db:migrate
 npm run db:seed
-npm run dev                   # http://localhost:3000
 ```
 
-If `NEON_DATABASE_URL` is unset, the app falls back to a local PGlite database in `.data/` (development only — never in production).
+Without `NEON_DATABASE_URL`, development uses a local PGlite database under `.data/`. Production must always use the Neon connection string.
 
-Admin login: `/admin`, PIN from `ADMIN_PIN`. Sessions are HMAC-signed cookies (`ADMIN_SESSION_SECRET`).
+## Environment variables
 
-## 4. Project Structure
+Set these in Vercel Project Settings → Environment Variables. Never commit real values.
 
-```
-src/app            Pages and API routes
-  (storefront)     /, /product/[slug], /categories, /brands, /track, content pages
-  admin            /admin/* — dashboard, products, categories, brands, banners, orders, settings
-  api              Public: orders, search, categories — Admin: /api/admin/*
-src/components     admin/, cart/, checkout/, home/, layout/, product/, ui/
-src/lib            db/ (SQL), admin/ (validation, session), settings, hero, orders, analytics
-db/schema.sql      Schema applied by scripts/migrate.ts
-scripts/           migrate, seed, verify-db, test-catalogue, smoke-api
-docs/              Design system, database schema, tech-stack rationale, product sheet
-```
-
-## 5. Database & Seed Data
-
-- **Tables:** products, categories, brands, `product_categories` (many-to-many), banners (hero slides + seasonal promo), orders, store_settings (single row), order_number_seq.
-- **Order items** are stored as JSONB with `slug, title, brand, color, quantity, price, image` — a snapshot at checkout time.
-- **Seed source of truth:** `src/lib/data.ts`. `npm run db:seed` upserts catalogue and settings; after content is managed through `/admin`, do not re-run it casually — it resets seeded fields (banners, settings, taxonomy) to defaults.
-- `npm run db:verify` / `npm run db:test` assert the catalogue against the product brief (derived from `data.ts`).
-
-## 6. Admin Panel Notes
-
-| Module | Route | Notes |
-| --- | --- | --- |
-| Products | `/admin/products` | Multi-step form; image uploads → Cloudinary; colour variants; “Also appears in” secondary categories |
-| Categories / Brands | `/admin/categories`, `/admin/brands` | CRUD with sort order, featured/active flags |
-| Banners | `/admin/banners` | Hero carousel slides + seasonal highlight banner (step 3) |
-| Orders | `/admin/orders` | Status workflow, delivery address, item photos, WhatsApp update, printable slip |
-| Settings | `/admin/settings` | Contact, socials, logo, announcement, pixels, delivery charges |
-
-**Critical:** `PUT /api/admin/settings` replaces the **entire** settings row — always GET the current object, mutate the needed fields, then PUT. The same applies to `PUT /api/admin/home` (expects `{ slides: [...] }` or `{ promo: {...} }`).
-
-Admin-facing UI copy is written in informal Hinglish (labels, hints, notifications); storefront copy is English.
-
-## 7. Orders & Fulfilment
-
-1. Customer checks out (COD) → `POST /api/orders` → order created as `pending`, number `KCH-1001…` from a sequence.
-2. Admin confirms, then updates status: `pending → confirmed → dispatched → delivered` (or `cancelled`) via `/api/orders/[orderNumber]` PATCH.
-3. “Send WhatsApp Update” opens a pre-filled message to the customer for the current status.
-4. Customer checks status at `/track` (public GET, excludes name/phone/address).
-
-There is no courier integration — statuses are set manually by the admin.
-
-## 8. Media
-
-- All admin uploads go through `POST /api/admin/upload` → Cloudinary (`kch-products` folder), converted to **WebP** (animated GIFs excepted), capped at 2000 px on the long side, ≤ 15 MB.
-- Delivery uses `f_auto,q_auto`; `next/image` serves optimised variants.
-- Recommended sizes: products 1200×1600, hero 1920×1080, seasonal banner 1920×800, category tiles 1600×1200, logos 600×200 transparent PNG.
-
-## 9. Analytics
-
-`src/lib/analytics.ts` + `src/components/analytics/PixelLoader.tsx` inject Meta (`fbq`) and TikTok (`ttq`) pixels from settings. Events: PageView (on load and route change), ViewContent (product page), AddToCart (checkout open), Purchase / CompletePayment (order accepted). Empty IDs in settings = disabled.
-
-## 10. Testing
-
-| Command | Covers |
+| Variable | Purpose |
 | --- | --- |
-| `npm run lint` | ESLint (0 errors) |
-| `npx tsc --noEmit` | Type check |
-| `npm run smoke:api` | 137 end-to-end checks: auth, CRUD, checkout, orders, settings, banners, storefront |
-| `npm run db:verify` | Database vs product brief |
-| `npm run db:test` | Catalogue data tests |
+| `ADMIN_PIN` | PIN for `/admin` login |
+| `ADMIN_SESSION_SECRET` | Signs admin session cookies; use a long random value |
+| `NEON_DATABASE_URL` | Production PostgreSQL connection string |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary server secret |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.kamranclothhouse.pk` |
 
-`smoke:api` boots its own server on port 3210 against a throwaway database (smoke: `NEON_DATABASE_URL` empty → PGlite) and **requires any running dev server to be stopped first** (Next.js allows one server per directory).
+Meta and TikTok Pixel IDs are intentionally managed in Admin → Settings, not in the repository.
 
-## 11. Deployment
+## Admin workflow
 
-- Platform: **Vercel** (free tier). Environment variables must be set in project settings (see `.env.example`) — `.env.local` never ships with the repository.
-- Database: Neon (Postgres). Run `db:migrate` and `db:seed` once against production, then manage content via `/admin`.
-- Domain: `kamrancloth.pk` — add in Vercel and point DNS (A/CNAME) accordingly.
-- After admin changes, pages regenerate via ISR (≤ 60 s) or on-demand revalidation (`src/lib/admin/revalidate.ts`).
+- Products: add/edit prices, stock, images, colours and categories.
+- Categories and brands: edit names, descriptions, images and ordering.
+- Homepage: edit hero slides and seasonal banner.
+- Orders: confirm, dispatch, deliver, cancel or return orders; send WhatsApp updates and print slips.
+- Settings: update contact details, delivery charges, social links, announcement text and tracking Pixel IDs.
 
-## 12. Conventions
+Do not run `npm run db:seed` against the production database after the client starts managing content through the admin panel. Seeding restores catalogue/settings defaults and can overwrite managed content.
 
-- TypeScript strict; path alias `@/* → ./src/*`.
-- Design tokens and component rules: `docs/DESIGN_SYSTEM.md` — use semantic utilities (`bg-brand`, `text-gold`, `text-ink`, `border-line`) over raw colours.
-- Money in PKR integers; format via `Rs. ${n.toLocaleString()}`.
-- Keep secrets out of the repo; never prefix database credentials with `NEXT_PUBLIC_`.
+## Analytics
+
+When IDs are saved in Admin → Settings, the storefront sends:
+
+- `PageView` on initial load and client-side navigation.
+- `ViewContent` on product pages.
+- `AddToCart` when an item is added to the cart.
+- `InitiateCheckout` when checkout opens.
+- Meta `Purchase` and TikTok `CompletePayment` after an order is accepted.
+
+Events can be checked in Meta Events Manager, TikTok Events Manager and the relevant browser helper extensions. Conversions API is optional; the browser Pixel setup is already active.
+
+## Media guidance
+
+Upload product images through the admin panel. They are stored in Cloudinary as WebP and delivered with automatic quality/format optimisation. Recommended product ratio is 3:4 (about 1200 × 1600 px); hero images are widescreen.
+
+## Verification commands
+
+```bash
+npx tsc --noEmit
+npm run lint
+```
+
+`npm run db:verify` and `npm run db:test` are development checks. Stop any running dev server before running the full API smoke test.
+
+## Important maintenance notes
+
+- Keep database and Cloudinary secrets server-side.
+- Change the admin PIN and session secret when ownership changes.
+- Use Vercel production deployments for live changes; GitHub `main` is connected to Vercel.
+- Keep the client’s Google, GitHub, Vercel, Neon, Cloudinary, Meta, TikTok and PKNIC accounts under the client’s own email and billing details.
