@@ -92,9 +92,9 @@ export default function ProductCard({ product, showBrand = true, showColor = fal
 
         <div className="flex items-baseline gap-2 mb-3 mt-auto">
           <span className="text-sm font-bold" style={{ color: '#10231C' }}>
-            Rs. {product.price.toLocaleString()}
+            {product.priceOnInquiry ? 'Price on inquiry' : `Rs. ${product.price.toLocaleString()}`}
           </span>
-          {product.compareAtPrice && (
+          {!product.priceOnInquiry && product.compareAtPrice && (
             <span className="text-xs line-through" style={{ color: 'rgba(16, 35, 28, 0.45)' }}>
               Rs. {product.compareAtPrice.toLocaleString()}
             </span>

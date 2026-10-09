@@ -116,10 +116,9 @@ function toAdminProduct(row: ProductRow): AdminProduct {
  *  the product page needs it to decide whether the buy button is live. */
 export function toPublicProduct(row: ProductRow): Product {
   const admin = toAdminProduct(row);
-  const { id, stockQuantity, priceOnInquiry, sortOrder, ...product } = admin;
+  const { id, stockQuantity, sortOrder, ...product } = admin;
   void id;
   void stockQuantity;
-  void priceOnInquiry;
   void sortOrder;
   return product;
 }

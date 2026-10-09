@@ -40,6 +40,13 @@ export default function ProductDetails({
     ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
     : 0;
 
+  const inquiryWhatsappMsg = encodeURIComponent(
+    `Assalam-o-Alaikum, mujhe is product ki price aur availability confirm karwani hai:\n\n` +
+      `Product: ${product.name}\n` +
+      `Brand: ${product.brand}\n\n` +
+      `Please current price aur delivery details share kar dein.`
+  );
+
   const legacyWhatsappMsg = encodeURIComponent(
     `السلام علیکم، مجھے یہ fabric order کرنی ہے:\n\n` +
       `Product: ${product.name}\n` +
@@ -215,8 +222,10 @@ export default function ProductDetails({
 
               {/* Price */}
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-2xl font-medium text-ink">Rs. {product.price.toLocaleString()}</span>
-                {product.compareAtPrice && (
+                <span className="text-2xl font-medium text-ink">
+                  {product.priceOnInquiry ? 'Price on inquiry' : `Rs. ${product.price.toLocaleString()}`}
+                </span>
+                {!product.priceOnInquiry && product.compareAtPrice && (
                   <span className="text-base line-through" style={{ color: 'var(--color-fg-muted)' }}>
                     Rs. {product.compareAtPrice.toLocaleString()}
                   </span>
@@ -316,7 +325,7 @@ export default function ProductDetails({
 
               {/* CTA Buttons */}
               <div className="flex flex-col gap-3 mb-10">
-                {inStock ? (
+                {inStock && !product.priceOnInquiry ? (
                   <>
                     <button
                       id="btn-order-cod"
@@ -338,13 +347,22 @@ export default function ProductDetails({
                       {addedToCart ? '✓ Added to Cart' : 'Add to Cart'}
                     </button>
                   </>
+                ) : product.priceOnInquiry && inStock ? (
+                  <a
+                    href={`https://wa.me/${settings.whatsappNumber}?text=${inquiryWhatsappMsg}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-4 text-center text-xs tracking-[0.3em] uppercase bg-brand text-white hover:bg-brand-soft transition-colors font-semibold shadow-md"
+                  >
+                    Inquire on WhatsApp
+                  </a>
                 ) : (
                   <span className="w-full py-4 text-center text-xs tracking-[0.3em] uppercase bg-cream text-muted font-semibold border border-line">
                     Out of Stock
                   </span>
                 )}
                 <a
-                  href={`https://wa.me/${settings.whatsappNumber}?text=${inStock ? whatsappMsg : outOfStockMsg}`}
+                  href={`https://wa.me/${settings.whatsappNumber}?text=${inStock ? (product.priceOnInquiry ? inquiryWhatsappMsg : whatsappMsg) : outOfStockMsg}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-4 text-center text-xs tracking-[0.3em] uppercase bg-[var(--color-whatsapp)] text-white hover:bg-[var(--color-whatsapp-hover)] transition-colors font-semibold shadow-md flex items-center justify-center gap-2"

@@ -10,6 +10,7 @@ interface Suggestion {
   name: string;
   brand: string;
   price: number;
+  priceOnInquiry?: boolean;
   image: string;
 }
 
@@ -184,7 +185,7 @@ export default function SearchOverlay({ open, onClose }: { open: boolean; onClos
                           </p>
                         </div>
                         <span className="text-sm font-semibold text-ink whitespace-nowrap">
-                          Rs. {item.price.toLocaleString()}
+                          {item.priceOnInquiry ? 'On inquiry' : `Rs. ${item.price.toLocaleString()}`}
                         </span>
                       </Link>
                     </li>

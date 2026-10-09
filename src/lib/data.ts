@@ -14,6 +14,8 @@ export interface Product {
   /** Extra categories this product also appears in (product_categories join). */
   alsoIn?: string[];
   price: number;
+  /** When true, show a WhatsApp inquiry instead of a numeric price/order CTA. */
+  priceOnInquiry?: boolean;
   compareAtPrice?: number;
   badge?: string;
   fabricType: string;
