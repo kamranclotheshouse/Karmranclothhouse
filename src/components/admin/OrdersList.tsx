@@ -62,6 +62,8 @@ function whatsappUpdateUrl(order: Order, status: OrderStatus, settings: StoreSet
     'Items:',
     items,
     '',
+    `Subtotal: ${formatMoney(order.subtotal)}`,
+    `Delivery Charges: ${order.deliveryCharges === 0 ? 'FREE' : formatMoney(order.deliveryCharges)}`,
     `Total: ${formatMoney(order.totalAmount)} (Cash on Delivery)`,
     shipment,
     '',
