@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS store_settings (
     facebook_url             TEXT,
     tiktok_url               TEXT,
     delivery_charge          NUMERIC(10,2) NOT NULL DEFAULT 250,
-    free_delivery_threshold  NUMERIC(10,2) NOT NULL DEFAULT 5000,
+    free_delivery_threshold  NUMERIC(10,2) NOT NULL DEFAULT 15000,
     announcement_enabled     BOOLEAN NOT NULL DEFAULT true,
     announcement_text        TEXT,
     meta_pixel_id            VARCHAR(50),

@@ -247,7 +247,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
           <div className="admin-grid">
             <AdminField
               label="Free delivery above (Rs)"
-              hint="Is amount ya usse zyada ke order par delivery free. Jaise 5000."
+              hint="Is amount ya usse zyada ke order par delivery free. Jaise 15000."
               error={errors.freeDeliveryThreshold}
             >
               <AdminInput
@@ -255,7 +255,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
                 min={0}
                 value={values.freeDeliveryThreshold}
                 onChange={(e) => set('freeDeliveryThreshold', e.target.value)}
-                placeholder="5000"
+                placeholder="15000"
                 aria-invalid={Boolean(errors.freeDeliveryThreshold)}
               />
             </AdminField>
@@ -323,7 +323,7 @@ export function SettingsForm({ settings }: { settings: StoreSettings }) {
               rows={2}
               value={values.announcementText}
               onChange={(e) => set('announcementText', e.target.value)}
-              placeholder="Free delivery on orders above Rs 5,000 · Cash on Delivery across Pakistan"
+            placeholder="Free delivery on orders above Rs 15,000 · Cash on Delivery across Pakistan"
               maxLength={160}
               aria-invalid={Boolean(errors.announcementText)}
             />

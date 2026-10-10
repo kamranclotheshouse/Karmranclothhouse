@@ -105,7 +105,7 @@ export function validateSettings(values: SettingsFormValues): SettingsErrors {
 
   const threshold = money(values.freeDeliveryThreshold);
   if (threshold === null) {
-    errors.freeDeliveryThreshold = 'Free delivery limit number honi chahiye, jaise 5000.';
+    errors.freeDeliveryThreshold = 'Free delivery limit number honi chahiye, jaise 15000.';
   } else if (threshold < 0) {
     errors.freeDeliveryThreshold = 'Free delivery limit minus nahi ho sakta — 0 ya zyada likhein.';
   }

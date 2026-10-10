@@ -48,10 +48,10 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   facebookUrl: '',
   tiktokUrl: '',
   deliveryCharge: 250,
-  freeDeliveryThreshold: 5000,
+  freeDeliveryThreshold: 15000,
   announcementEnabled: true,
   announcementText:
-    'Free delivery on orders above Rs 5,000 · Cash on Delivery across Pakistan',
+    'Free delivery on orders above Rs 15,000 · Cash on Delivery across Pakistan',
   metaPixelId: '',
   tiktokPixelId: '',
 };
