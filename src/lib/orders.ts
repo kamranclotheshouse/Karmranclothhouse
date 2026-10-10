@@ -20,10 +20,37 @@ export const ORDER_STATUSES: OrderStatus[] = [
  * `validateOrderInput` — a city can never be pickable yet rejected.
  */
 export const PAKISTAN_CITIES = [
-  'Peshawar', 'Islamabad', 'Rawalpindi', 'Lahore', 'Karachi', 'Faisalabad',
-  'Quetta', 'Multan', 'Gujranwala', 'Hyderabad', 'Sialkot', 'Abbottabad',
-  'Mardan', 'Swat', 'Nowshera', 'Charsadda', 'Kohat', 'Bannu', 'Dera Ismail Khan',
-  'Mansehra', 'Haripur', 'Attock', 'Swabi', 'Bahawalpur', 'Sargodha',
+  // Islamabad Capital Territory, Punjab and AJK
+  'Islamabad', 'Rawalpindi', 'Lahore', 'Faisalabad', 'Gujranwala', 'Multan',
+  'Sialkot', 'Bahawalpur', 'Sargodha', 'Sahiwal', 'Jhang', 'Sheikhupura',
+  'Gujrat', 'Rahim Yar Khan', 'Dera Ghazi Khan', 'Wah Cantt', 'Taxila',
+  'Attock', 'Chakwal', 'Mianwali', 'Khushab', 'Bhakkar', 'Layyah', 'Muzaffargarh',
+  'Lodhran', 'Khanewal', 'Vehari', 'Pakpattan', 'Okara', 'Kasur', 'Nankana Sahib',
+  'Hafizabad', 'Mandi Bahauddin', 'Narowal', 'Murree', 'Jhelum', 'Gujar Khan',
+  'Kotli', 'Mirpur', 'Muzaffarabad', 'Rawalakot', 'Bagh',
+
+  // Khyber Pakhtunkhwa
+  'Peshawar', 'Mardan', 'Swat', 'Mingora', 'Nowshera', 'Charsadda', 'Kohat',
+  'Bannu', 'Dera Ismail Khan', 'Abbottabad', 'Mansehra', 'Haripur', 'Swabi',
+  'Chitral', 'Lower Dir', 'Upper Dir', 'Timergara', 'Bajaur', 'Khar',
+  'Mohmand', 'Khyber', 'Jamrud', 'Karak', 'Hangu', 'Tank', 'Lakki Marwat',
+  'Torghar', 'Battagram', 'Buner', 'Shangla', 'Malakand', 'Waziristan',
+
+  // Sindh
+  'Karachi', 'Hyderabad', 'Sukkur', 'Larkana', 'Nawabshah', 'Shaheed Benazirabad',
+  'Mirpur Khas', 'Thatta', 'Badin', 'Dadu', 'Jacobabad', 'Shikarpur', 'Khairpur',
+  'Ghotki', 'Kashmore', 'Tando Adam', 'Tando Allahyar', 'Umerkot', 'Matiari',
+  'Sanghar', 'Jamshoro',
+
+  // Balochistan
+  'Quetta', 'Gwadar', 'Turbat', 'Khuzdar', 'Chaman', 'Sibi', 'Zhob', 'Loralai',
+  'Dera Bugti', 'Naseerabad', 'Jaffarabad', 'Kalat', 'Mastung', 'Pishin',
+  'Killa Abdullah', 'Killa Saifullah', 'Lasbela', 'Awaran', 'Panjgur', 'Kharan',
+  'Nushki', 'Washuk',
+
+  // Gilgit-Baltistan
+  'Gilgit', 'Skardu', 'Hunza', 'Nagar', 'Ghizer', 'Astore', 'Diamer', 'Chilas',
+  'Ghanche', 'Shigar', 'Kharmang',
 ];
 
 export interface OrderItem {
