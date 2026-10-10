@@ -57,9 +57,27 @@ export default async function FaqPage() {
   const settings = await getStoreSettings();
   const freeDelivery = settings.freeDeliveryThreshold.toLocaleString();
   const flat = settings.deliveryCharge;
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.a.replace('%FREE%', freeDelivery).replace('%FLAT%', String(flat)),
+      },
+    })),
+  };
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c'),
+        }}
+      />
       {/* ── Page Header ── */}
       <section
         style={{

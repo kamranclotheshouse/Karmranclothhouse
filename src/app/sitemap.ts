@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { listProductSlugs, listTaxonomySlugs } from '@/lib/db/storefront';
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kamranclothhouse.pk';
+const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.kamranclothhouse.pk';
 
 /** Read on every request so new products/categories appear immediately. */
 export const dynamic = 'force-dynamic';
