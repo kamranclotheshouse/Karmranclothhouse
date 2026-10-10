@@ -566,6 +566,16 @@ export default function CheckoutDrawer({
                   <span className="text-ink font-medium">{placedOrder?.city}</span>
                 </div>
                 <div className="flex justify-between text-xs pt-2.5 border-t border-line">
+                  <span className="text-muted uppercase tracking-wider">Subtotal</span>
+                  <span className="text-ink font-medium">Rs. {placedOrder?.subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted uppercase tracking-wider">Delivery Charges</span>
+                  <span className="text-ink font-medium">
+                    {placedOrder?.deliveryFee === 0 ? 'FREE' : `Rs. ${placedOrder?.deliveryFee.toLocaleString()}`}
+                  </span>
+                </div>
+                <div className="flex justify-between text-xs pt-2.5 border-t border-line">
                   <span className="text-ink font-bold uppercase tracking-wider">Total COD Amount</span>
                   <span className="text-ink font-bold text-base">Rs. {confirmedTotal.toLocaleString()}</span>
                 </div>
