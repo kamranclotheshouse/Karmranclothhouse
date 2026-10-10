@@ -29,6 +29,15 @@ function formatDate(iso: string): string {
   });
 }
 
+/** Convert the checkout's 03XXXXXXXXX value to WhatsApp's 923XXXXXXXXX form. */
+function pakistanWhatsAppNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('00')) return digits.slice(2);
+  if (digits.startsWith('92')) return digits;
+  if (digits.startsWith('0')) return `92${digits.slice(1)}`;
+  return `92${digits}`;
+}
+
 function whatsappUpdateUrl(order: Order, status: OrderStatus, settings: StoreSettings): string {
   const message = STATUS_MESSAGES[status].replace('{id}', order.orderNumber);
   const legacy =
@@ -59,7 +68,8 @@ function whatsappUpdateUrl(order: Order, status: OrderStatus, settings: StoreSet
     `${settings.storeName} · Saddar, Peshawar`,
   ].join('\n');
   void legacy;
-  return `https://wa.me/92${order.customerPhone.replace(/^0?3/, '3').replace(/\D/g, '').slice(-9)}?text=${encodeURIComponent(full)}`;
+  const customerWhatsApp = pakistanWhatsAppNumber(order.customerPhone);
+  return `https://wa.me/${customerWhatsApp}?text=${encodeURIComponent(full)}`;
 }
 
 /**
