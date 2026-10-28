@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS products (
     stock_quantity    INT NOT NULL DEFAULT 50,
     is_featured       BOOLEAN NOT NULL DEFAULT false,
     is_bestseller     BOOLEAN NOT NULL DEFAULT false,
+    is_on_sale        BOOLEAN NOT NULL DEFAULT false,
     badge             VARCHAR(60),      -- 'New Arrival', 'Bestseller', ...
 
     -- Media — ARRAY ORDER IS DISPLAY ORDER. images[0] is the hero/thumbnail.
@@ -78,6 +79,9 @@ CREATE TABLE IF NOT EXISTS products (
     created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Additive product fields for databases created before is_on_sale existed.
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_on_sale BOOLEAN NOT NULL DEFAULT false;
 
 -- 3b. PRODUCT ↔ CATEGORY — extra categories for dual-listed products -------
 -- The product's main category stays in products.category_id (used for sort
@@ -201,6 +205,7 @@ CREATE INDEX IF NOT EXISTS idx_products_category   ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_brand      ON products(brand_id);
 CREATE INDEX IF NOT EXISTS idx_products_featured   ON products(is_featured) WHERE is_featured;
 CREATE INDEX IF NOT EXISTS idx_products_bestseller ON products(is_bestseller) WHERE is_bestseller;
+CREATE INDEX IF NOT EXISTS idx_products_sale       ON products(is_on_sale) WHERE is_on_sale;
 CREATE INDEX IF NOT EXISTS idx_products_in_stock   ON products(is_in_stock);
 CREATE INDEX IF NOT EXISTS idx_product_categories_category ON product_categories(category_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status       ON orders(order_status);

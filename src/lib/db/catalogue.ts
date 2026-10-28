@@ -33,6 +33,7 @@ interface ProductRow {
   stock_quantity: number;
   is_featured: boolean;
   is_bestseller: boolean;
+  is_on_sale: boolean;
   badge: string | null;
   images: string[];
   image_alt: string | null;
@@ -46,6 +47,7 @@ export interface AdminProduct extends Product {
   isInStock: boolean;
   stockQuantity: number;
   priceOnInquiry: boolean;
+  isOnSale: boolean;
   imageAlt?: string;
   sortOrder: number;
 }
@@ -59,7 +61,7 @@ const PRODUCT_SELECT = `
          p.season, p.weave_type,
          p.price, p.compare_at_price, p.price_on_inquiry,
          p.is_in_stock, p.stock_quantity,
-         p.is_featured, p.is_bestseller, p.badge,
+         p.is_featured, p.is_bestseller, p.is_on_sale, p.badge,
          p.images, p.image_alt, p.color_variants, p.sort_order
     FROM products p
     LEFT JOIN brands     b ON b.id = p.brand_id
@@ -103,6 +105,7 @@ function toAdminProduct(row: ProductRow): AdminProduct {
     images: Array.isArray(row.images) ? row.images.map(optimizeProductImage) : [],
     isFeatured: row.is_featured,
     isBestseller: row.is_bestseller,
+    isOnSale: Boolean(row.is_on_sale),
     sku: row.sku ?? undefined,
     imageAlt: row.image_alt ?? undefined,
     stockQuantity: row.stock_quantity,
@@ -135,6 +138,16 @@ export class NotFoundError extends Error {
 export async function listProducts(): Promise<AdminProduct[]> {
   const rows = await query<ProductRow>(
     `${PRODUCT_SELECT} ORDER BY p.sort_order ASC, p.title ASC`
+  );
+  return rows.map(toAdminProduct);
+}
+
+/** Products explicitly marked on sale. */
+export async function listSaleProducts(): Promise<AdminProduct[]> {
+  const rows = await query<ProductRow>(
+    `${PRODUCT_SELECT}
+      WHERE p.is_on_sale = true
+      ORDER BY p.sort_order ASC, p.title ASC`
   );
   return rows.map(toAdminProduct);
 }
@@ -252,6 +265,7 @@ export interface ProductPatch {
   stockQuantity?: number;
   isFeatured?: boolean;
   isBestseller?: boolean;
+  isOnSale?: boolean;
   badge?: string | null;
   images?: string[];
   imageAlt?: string | null;
@@ -281,14 +295,14 @@ export async function createProduct(input: ProductInput): Promise<AdminProduct> 
        title, slug, sku, brand_id, category_id, description,
        fabric_type, fabric_length, fabric_width, season, weave_type,
        price, compare_at_price, price_on_inquiry,
-       is_in_stock, stock_quantity, is_featured, is_bestseller, badge,
+       is_in_stock, stock_quantity, is_featured, is_bestseller, is_on_sale, badge,
        images, image_alt, color_variants, sort_order
      ) VALUES (
        $1,$2,$3,$4,$5,$6,
        $7,$8,$9,$10,$11,
        $12,$13,$14,
-       $15,$16,$17,$18,$19,
-       $20,$21,$22,$23
+       $15,$16,$17,$18,$19,$20,
+       $21,$22,$23,$24
      )
      RETURNING id`,
     [
@@ -310,6 +324,7 @@ export async function createProduct(input: ProductInput): Promise<AdminProduct> 
       input.stockQuantity ?? 50,
       input.isFeatured ?? false,
       input.isBestseller ?? false,
+      input.isOnSale ?? false,
       input.badge ?? null,
       input.images ?? [],
       input.imageAlt ?? null,
@@ -354,6 +369,7 @@ export async function updateProduct(id: string, patch: ProductPatch): Promise<Ad
   if (patch.stockQuantity !== undefined) set('stock_quantity', patch.stockQuantity);
   if (patch.isFeatured !== undefined) set('is_featured', patch.isFeatured);
   if (patch.isBestseller !== undefined) set('is_bestseller', patch.isBestseller);
+  if (patch.isOnSale !== undefined) set('is_on_sale', patch.isOnSale);
   if (patch.badge !== undefined) set('badge', patch.badge);
   if (patch.images !== undefined) set('images', patch.images);
   if (patch.imageAlt !== undefined) set('image_alt', patch.imageAlt);

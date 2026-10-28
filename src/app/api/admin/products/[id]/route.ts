@@ -104,7 +104,7 @@ export async function PATCH(request: Request, { params }: Params) {
     width: optionalString(body, 'width') ?? existing.width,
     season: optionalString(body, 'season') ?? existing.season,
     weaveType: optionalString(body, 'weaveType') ?? existing.weaveType,
-    badge: optionalString(body, 'badge') ?? (existing.badge ?? ''),
+    badge: body.badge === null ? '' : optionalString(body, 'badge') ?? (existing.badge ?? ''),
     sku: optionalString(body, 'sku') ?? (existing.sku ?? ''),
     imageAlt: optionalString(body, 'imageAlt') ?? (existing.imageAlt ?? ''),
   };
@@ -148,6 +148,7 @@ export async function PATCH(request: Request, { params }: Params) {
     if (typeof body.isInStock === 'boolean') patch.isInStock = body.isInStock;
     if (typeof body.isFeatured === 'boolean') patch.isFeatured = body.isFeatured;
     if (typeof body.isBestseller === 'boolean') patch.isBestseller = body.isBestseller;
+    if (typeof body.isOnSale === 'boolean') patch.isOnSale = body.isOnSale;
     if (num(values.stockQuantity) !== undefined) patch.stockQuantity = num(values.stockQuantity);
 
     if (Array.isArray(body.images)) {

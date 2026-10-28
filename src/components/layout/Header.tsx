@@ -18,6 +18,7 @@ const navBefore = [
 ];
 
 const navAfter = [
+  { label: 'Sale', href: '/sale', highlight: true },
   { label: 'Tailoring', href: '/tailoring' },
   { label: 'Contact Us', href: '/contact' },
 ];
@@ -41,17 +42,35 @@ function isActiveLink(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function NavTab({ label, href, active }: { label: string; href: string; active: boolean }) {
+function NavTab({
+  label,
+  href,
+  active,
+  highlight,
+}: {
+  label: string;
+  href: string;
+  active: boolean;
+  highlight?: boolean;
+}) {
   return (
     <Link
       href={href}
-      className="relative px-3 py-2 text-sm font-medium transition-all duration-300 nav-link-slide"
+      className="relative px-3 py-2 text-sm font-medium transition-all duration-300 nav-link-slide flex items-center gap-1.5"
       style={{
         fontFamily: "'Outfit', sans-serif",
-        color: '#C9A227',
+        color: highlight ? '#F5D77F' : '#C9A227',
       }}
     >
       {label}
+      {highlight && (
+        <span
+          className="px-1.5 py-0.5 text-[8px] font-extrabold tracking-wider uppercase rounded-full bg-[#B42318] text-white shadow-sm"
+          style={{ letterSpacing: '0.1em' }}
+        >
+          SALE
+        </span>
+      )}
       {active && (
         <span
           className="absolute left-3 right-3 -bottom-0.5 h-[2px] rounded-full transition-all duration-300"
@@ -299,17 +318,25 @@ export default function Header({ settings }: { settings: StoreSettings }) {
               Search
             </button>
 
-            {[...navBefore, ...navAfter].map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMenu}
-                className="text-sm font-medium hover:opacity-70 transition-opacity"
-                style={{ color: '#C9A227' }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {[...navBefore, ...navAfter].map((link) => {
+              const item = link as { label: string; href: string; highlight?: boolean };
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  className="text-sm font-medium hover:opacity-70 transition-opacity flex items-center justify-between"
+                  style={{ color: item.highlight ? '#F5D77F' : '#C9A227' }}
+                >
+                  <span>{item.label}</span>
+                  {item.highlight && (
+                    <span className="px-2 py-0.5 text-[9px] font-bold tracking-wider uppercase rounded-full bg-[#B42318] text-white">
+                      Sale
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
 
             {/* Mobile categories list */}
             <details className="group">

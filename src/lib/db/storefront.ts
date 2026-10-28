@@ -15,6 +15,7 @@ import {
   listBrands,
   listCategories,
   listProducts,
+  listSaleProducts,
   listProductsByCategorySlug,
   searchProducts,
 } from './catalogue';
@@ -23,6 +24,11 @@ import type { Brand, Category, Product } from '../data';
 /** Every product, in `sort_order` order. */
 export async function getAllProducts(): Promise<Product[]> {
   return listProducts();
+}
+
+/** Sale items only — marked on sale, or having a sale badge, or compare_at_price > price. */
+export async function getSaleProducts(): Promise<Product[]> {
+  return listSaleProducts();
 }
 
 export async function getProduct(slug: string): Promise<Product | null> {

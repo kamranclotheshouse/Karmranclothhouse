@@ -35,6 +35,17 @@ const NAV_LINKS = [
     ),
   },
   {
+    label: 'Sale',
+    href: '/admin/sale',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 5L5 19" />
+        <circle cx="6.5" cy="6.5" r="2.5" />
+        <circle cx="17.5" cy="17.5" r="2.5" />
+      </svg>
+    ),
+  },
+  {
     label: 'Categories',
     href: '/admin/categories',
     icon: (

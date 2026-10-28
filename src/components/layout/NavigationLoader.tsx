@@ -7,9 +7,11 @@ export default function NavigationLoader() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setLoading(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     const clear = () => setLoading(false);

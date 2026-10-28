@@ -95,6 +95,7 @@ export function ProductForm({
     isInStock: product?.isInStock ?? true,
     isFeatured: product?.isFeatured ?? false,
     isBestseller: product?.isBestseller ?? false,
+    isOnSale: product?.isOnSale ?? false,
     priceOnInquiry: product?.priceOnInquiry ?? false,
   });
   const [saving, setSaving] = useState(false);
@@ -668,6 +669,16 @@ export function ProductForm({
               labelOn="Bestseller mark karein"
               labelOff="Bestseller nahi"
               hint="Sirf marketing ke liye — 'Bestseller' wale section me aata hai."
+            />
+            <AdminToggle
+              checked={flags.isOnSale}
+              onChange={(next) => {
+                setFlags((f) => ({ ...f, isOnSale: next }));
+                setDirty(true);
+              }}
+              labelOn="Sale pe hai — Sale page pe dikhayein"
+              labelOff="Sale pe nahi hai"
+              hint="Sale on karne par ye product website ke Sale page aur admin ke Sale tab mein dikhega."
             />
           </div>
         </AdminSection>

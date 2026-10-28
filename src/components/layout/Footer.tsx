@@ -26,6 +26,7 @@ export default function Footer({ settings }: { settings: StoreSettings }) {
     { label: 'About Us', href: '/about' },
     { label: 'Brands', href: '/brands' },
     { label: 'Categories', href: '/categories' },
+    { label: 'Sale', href: '/sale' },
     { label: 'Tailoring', href: '/tailoring' },
     { label: 'Contact Us', href: '/contact' },
   ];

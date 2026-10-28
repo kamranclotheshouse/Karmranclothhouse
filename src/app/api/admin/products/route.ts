@@ -106,6 +106,7 @@ export async function POST(request: Request) {
       stockQuantity: num(values.stockQuantity) ?? 50,
       isFeatured: body.isFeatured === true,
       isBestseller: body.isBestseller === true,
+      isOnSale: body.isOnSale === true,
       badge: values.badge.trim() || null,
       images: Array.isArray(body.images)
         ? (body.images as unknown[]).filter((i): i is string => typeof i === 'string')

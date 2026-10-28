@@ -357,6 +357,99 @@
   color: var(--adm-muted);
 }
 
+/* ── Filter Bar (ProductList / SaleProductList) ───────────── */
+.admin-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-search-input {
+  width: 100%;
+  max-width: 340px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--adm-ink);
+  background-color: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  font-family: inherit;
+}
+.admin-search-input:focus {
+  outline: none;
+  border-color: var(--adm-green);
+  box-shadow: 0 0 0 3px rgba(14, 59, 44, 0.1);
+}
+.admin-search-input::placeholder { color: rgba(16, 35, 28, 0.35); }
+
+/* ── Pill Filter Tabs ─────────────────────────────────────── */
+.admin-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--adm-green);
+  background-color: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 160ms ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.admin-pill:hover {
+  border-color: var(--adm-green);
+  background-color: rgba(14, 59, 44, 0.05);
+}
+.admin-pill--active {
+  background-color: var(--adm-green);
+  border-color: var(--adm-green);
+  color: #FFFFFF;
+}
+.admin-pill--active:hover {
+  background-color: var(--adm-green-soft);
+  border-color: var(--adm-green-soft);
+}
+
+/* ── Bulk Actions Bar ─────────────────────────────────────── */
+.admin-bulk-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background-color: rgba(14, 59, 44, 0.03);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+}
+
+.admin-bulk-meta {
+  flex: 1 1 auto;
+  font-size: 12px;
+  color: var(--adm-muted);
+}
+
+.admin-bulk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 /* ── Orders ───────────────────────────────────────────────── */
 .admin-search {
   width: 100%;

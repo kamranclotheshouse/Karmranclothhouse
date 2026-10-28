@@ -28,6 +28,7 @@ export interface Product {
   images: string[];
   isFeatured?: boolean;
   isBestseller?: boolean;
+  isOnSale?: boolean;
 
   // Populated from the database, absent in the static seed catalogue below.
   id?: string;

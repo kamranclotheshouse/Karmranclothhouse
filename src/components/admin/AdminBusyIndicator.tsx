@@ -11,9 +11,11 @@ export function AdminBusyIndicator() {
   const activeRequests = useRef(0);
   const showTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setNavigating(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (!navigating) return undefined;
